@@ -1,5 +1,5 @@
 import Koa from 'koa';
-// import api from './routes/api.js';
+import api from './routes/api.js';
 import index from './routes/index.js';
 import koaLogger from 'koa-logger';
 import views from 'koa-views';
@@ -7,12 +7,15 @@ import koaBody from 'koa-body';
 import koaJson from 'koa-json';
 import koaFavicon from 'koa-favicon';
 import koaStaticServer from 'koa-static-server';
+import koaValidator from 'koa-middle-validator';
 import {
   koaCors, koaNotFound
 } from './middlewares/index.js';
 import { join as pathJoin } from 'path';
+import {customValidators} from './js/utils.js';
 
 const cwd = process.cwd();
+const validatorsConfig = customValidators();
 export class PresetMiddleware {
   constructor(app) {
     this.app = app;
@@ -33,18 +36,22 @@ export class PresetMiddleware {
     this.app.use(koaBody({
       multipart: true,
       formidable: {
-        maxFileSize: 20000 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
+        maxFileSize: 20000 * 1024 * 1024, // 设置上传文件大小最大限制，默认2M
+        uploadDir: pathJoin(cwd,'./src/assets/static/upload')
       },
       formLimit: '20mb',
       jsonLimit: '20mb',
       textLimit: '20mb'
+    }));
+    this.app.use(koaValidator({
+      customValidators:validatorsConfig
     }));
     this.app.use(koaJson());
     this.app.use(views(pathJoin(cwd, './src/assets/views'), {
       extension: 'pug'
     }));
     this.app.use(index.routes());
-    // this.app.use(api.routes());
+    this.app.use(api.routes());
     /**
      * 统一处理找不到的资源,建议把这个中间件放在路由后面
      */

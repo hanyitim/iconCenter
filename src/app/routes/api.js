@@ -1,9 +1,12 @@
-import v1 from './api/v1';
+import Router from 'koa-router';
+import {icon, upload, library} from './api/index.js';
 
 const router = new Router();
 router.prefix('/api/');
 
-router.use(v1.routes(), v1.allowedMethods());
+router.use(icon.routes(), icon.allowedMethods());
+router.use(upload.routes(),upload.allowedMethods());
+router.use(library.routes(),library.allowedMethods());
 
 router.get('/', async ctx => {
   ctx.body = 'api';
