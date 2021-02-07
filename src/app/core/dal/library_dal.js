@@ -1,4 +1,4 @@
-import {libraryModel} from '../models/index.js';
+import {libraryModel, iconModel} from '../models/index.js';
 
 
 
@@ -17,7 +17,7 @@ export async function addLibrary(data){
     return rData;
 }
 
-export async function removeLibrary({id,name}){
+export async function deleteLibrary({id,name}){
     let query = libraryModel.findById(id),
         queryData = await query.exec(),
         rData = {msg:''};
@@ -28,7 +28,6 @@ export async function removeLibrary({id,name}){
         rData.msg = '字体名称不正确';
     }
     else{
-        debugger;
         let libraryData = await query.deleteOne();
         console.log('libraryData',libraryData);
         if(!libraryData.deletedCount){
@@ -45,7 +44,6 @@ export async function updateLibrary(id,update){
     let query = libraryModel.findByIdAndUpdate(id,update),
         queryData = await query.exec(),
         rData = {msg:''};
-    debugger;
     if(queryData){
         rData.msg = '操作成功';
         rData.isSuccess = true;
@@ -61,6 +59,17 @@ export async function checkLibrary(checkQuery={}){
         rData = {};
     
     rData.data = queryData || [];
+    rData.isSuccess = true;
+    return rData;
+}
+
+export async function libraryIcons(libId){
+    debugger;
+    let query = iconModel.find({libId}),
+        iconsData = await query.exec(),
+        rData = {};
+
+    rData.data = iconsData;
     rData.isSuccess = true;
     return rData;
 }

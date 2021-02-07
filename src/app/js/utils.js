@@ -21,9 +21,9 @@ function parseG($g){
     })
     return tags;
 }
-export function parseFile(path,type){
+export function parseFile(path,type,libraryId){
     let filePath = pathJoin(cwd,'/src/assets/static/',path),
-        config = null;
+        icons = [];
     if(fs.existsSync(filePath)){
         let htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'}),
             $ = cheerio.load(htmlStr);
@@ -35,13 +35,14 @@ export function parseFile(path,type){
                     width = $svg.attr('width'),
                     height = $svg.attr('height');
                 const scale = baseWidth/parseInt(width);
-                config = {
+                icons.push({
                     width:baseWidth,
                     height:parseInt(height) * scale,
                     paths:parsePath($path,scale),
-                    tags:parseG($g)
-                };
-                return Promise.resolve(config);
+                    tags:parseG($g),
+                    libId:libraryId
+                });
+                return Promise.resolve(icons);
             }
         }
     }else{

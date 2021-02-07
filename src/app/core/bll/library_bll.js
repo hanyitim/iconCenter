@@ -8,8 +8,8 @@ export async function addLibrary(data){
     };
 }
 
-export async function removeLibrary(data){
-    let {msg, isSuccess} = await libraryDal.removeLibrary(data);
+export async function deleteLibrary(data){
+    let {msg, isSuccess} = await libraryDal.deleteLibrary(data);
     return {
         msg,
         isSuccess
@@ -26,6 +26,15 @@ export async function updateLibrary({id,...data}){
 
 export async function checkLibrary(queryData){
     let {msg, data, isSuccess} = await libraryDal.checkLibrary(queryData);
+    return {
+        msg,
+        data,
+        isSuccess
+    };
+}
+
+export async function libraryIcons(libId){
+    let {msg, data, isSuccess} = await libraryDal.libraryIcons(libId);
     return {
         msg,
         data,
