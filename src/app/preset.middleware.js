@@ -12,10 +12,9 @@ import {
   koaCors, koaNotFound
 } from './middlewares/index.js';
 import { join as pathJoin } from 'path';
-import {customValidators} from './js/utils.js';
+import {validators} from './js/utils.js';
 
 const cwd = process.cwd();
-const validatorsConfig = customValidators();
 export class PresetMiddleware {
   constructor(app) {
     this.app = app;
@@ -44,7 +43,7 @@ export class PresetMiddleware {
       textLimit: '20mb'
     }));
     this.app.use(koaValidator({
-      customValidators:validatorsConfig
+      customValidators:validators
     }));
     this.app.use(koaJson());
     this.app.use(views(pathJoin(cwd, './src/assets/views'), {

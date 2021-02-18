@@ -5,9 +5,8 @@ router.prefix('/');
 
 router.post('/library/add',libraryController.addLibrary);
 router.post('/library/:id/update',libraryController.updateLibrary);
-router.get('/library/list',libraryController.checkLibrary);
-router.get('/library/:id/icons',libraryController.libraryIcons);
-router.post('/library/:id/delete',libraryController.deleteLibrary);
+router.get('/library/list',libraryController.libraryList);
+router.get('/library/:id/delete',libraryController.deleteLibrary);
 export default router;
 
 

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import cheerio from 'cheerio';
 import fs from 'fs';
 import { join as pathJoin } from 'path';
@@ -44,17 +45,30 @@ export function parseFile(path,type,libraryId){
                 });
                 return Promise.resolve(icons);
             }
+            // case 'glyph':{
+            //     let 
+            // }
         }
     }else{
         return Promise.reject({msg:`${path}，文件不存在`});
     }
 }
 
-export function customValidators(){
-    const isId = (value)=>/[a-z0-9A-Z]+/.test(value);
+function customValidators(){
+    const isId = (value)=>mongoose.Types.ObjectId.isValid(value);
     const isFontName = (value)=>/[a-zA-Z0-9\_]+/.test(value)
     return {
         isId,
         isFontName
     }
 }
+
+function parseType(type){
+    return (param) => {
+        return `${Object.prototype.toString.call(param).toLocaleLowerCase()}`.slice(8,-1) === type.toLocaleLowerCase();
+    };
+}
+
+export const isString = parseType('string');
+export const isObject = parseType('object');
+export const validators = customValidators();

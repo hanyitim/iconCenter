@@ -1,56 +1,37 @@
 import {iconModel} from '../models/index.js';
+import {isObject, isString, validators} from '../../js/utils.js';
 
-// export async function iconList(libId){
-//     let query = iconModel.find({libId});
-//     let data = await query.exec();
-//     return data;
-// }
 
 export async function addIcons(icons){
-    let newIcons = await iconModel.insertMany(icons),
-        rData = {};
-    console.log('icons',newIcons);
-    if(newIcons.length > 0){
-        rData.msg = '操作成功';
-        rData.isSuccess = true;
-    }else{
-        rData.msg = '操作失败';
-        rData.isSuccess = false;
-    }
-    return rData;
+    let newIcons = await iconModel.insertMany(icons);
+    return newIcons;
 }
 
+export async function findIcon(body,isFindOne=false){
+    let query,
+        queryData;
+    if(isString(body) && validators.isId(body)){
+        query = iconModel.findById(body);
+    }
+    else if(isObject(body)){
+        query = isFindOne ? iconModel.findOne(body) : iconModel.find(body)
+    }
+    if(query && query.exec){
+        queryData = await query.exec();
+    }
+    return queryData;
+}
 
 export async function deleteIcon(id){
-    let query = iconModel.findById(id),
-        queryData = await query.exec(),
-        rData = {msg:''};
-    if(!queryData){
-        rData.msg = 'icon不找不到';
+    let icon;
+    if(validators.isId(id)){
+        icon = await iconModel.findByIdAndRemove(id);
     }
-    else{
-        let iconData = await query.deleteOne();
-        console.log('iconData',iconData);
-        if(!iconData.deletedCount){
-            rData.msg = 'icon删除失败';
-        }else{
-            rData.msg = 'icon删除成功';
-            rData.isSuccess = true;
-        }
-    }
-    return rData;
+    return icon;
 }
 
 export async function updateIcon(id,update){
     let query = iconModel.findByIdAndUpdate(id,update),
-        queryData = await query.exec(),
-        rData = {msg:''};
-    if(queryData){
-        rData.msg = '操作成功';
-        rData.isSuccess = true;
-    }else{
-        rData.errors = queryData;
-    }
-    return rData;
-
+        queryData = await query.exec();
+    return queryData;
 }

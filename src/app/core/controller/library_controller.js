@@ -21,10 +21,7 @@ export async function addLibrary(ctx){
         };
     }else{
         let bll = await libraryBll.addLibrary(ctx.request.body);
-        ctx.body = {
-            rCode: bll.isSuccess ? 0 : -1,
-            msg:bll.msg
-        }
+        ctx.body = bll
     }
 }
 
@@ -34,9 +31,10 @@ export async function deleteLibrary(ctx){
         id:{
             in:'params',
             notEmpty: true,
+            isId:true
         },
         name:{
-            in:'body',
+            in:'query',
             notEmpty: true,
             isFontName: true
         }
@@ -48,11 +46,8 @@ export async function deleteLibrary(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await libraryBll.deleteLibrary({...ctx.request.body,...ctx.params});
-        ctx.body = {
-            rCode: bll.isSuccess ? 0 : -1,
-            msg:bll.msg
-        }
+        let bll = await libraryBll.deleteLibrary({...ctx.request.query,...ctx.params});
+        ctx.body = bll;
     }
 }
 
@@ -74,28 +69,12 @@ export async function updateLibrary(ctx){
         };
     }else{
         let bll = await libraryBll.updateLibrary({...ctx.request.body,...ctx.params});
-        ctx.body = {
-            rCode: bll.isSuccess ? 0 : -1,
-            msg:bll.msg
-        }
+        ctx.body = bll;
     }
 }
 
-export async function checkLibrary(ctx){
-    let bll = await libraryBll.checkLibrary(ctx.request.body);
-    ctx.body = {
-        rCode: bll.isSuccess ? 0 : -1,
-        data: bll.data,
-        msg:bll.msg
-    }
+export async function libraryList(ctx){
+    let bll = await libraryBll.libraryList(ctx.request.body);
+    ctx.body = bll;
 }
 
-export async function libraryIcons(ctx){
-    debugger;
-    let bll = await libraryBll.libraryIcons(ctx.params.id);
-    ctx.body = {
-        rCode: bll.isSuccess ? 0 : -1,
-        data: bll.data,
-        msg:bll.msg
-    }
-}
