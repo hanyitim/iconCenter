@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import cheerio from 'cheerio';
 import fs from 'fs';
 import { join as pathJoin } from 'path';
+import {OPERATION_BIND, OPERATION_UN_BIND, LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT} from './config.js';
 
 const cwd = process.cwd();
 const baseWidth = 32;
@@ -56,10 +57,14 @@ export function parseFile(path,type,libraryId){
 
 function customValidators(){
     const isId = (value)=>mongoose.Types.ObjectId.isValid(value);
-    const isFontName = (value)=>/[a-zA-Z0-9\_]+/.test(value)
+    const isFontName = (value)=>/[a-zA-Z0-9\_]+/.test(value);
+    const isOperation = (value)=> [OPERATION_BIND,OPERATION_UN_BIND].indexOf(parseInt(value)) > -1;
+    const isIconListType = (value) => [LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT].indexOf(parseInt(value)) > -1;
     return {
         isId,
-        isFontName
+        isFontName,
+        isOperation,
+        isIconListType
     }
 }
 

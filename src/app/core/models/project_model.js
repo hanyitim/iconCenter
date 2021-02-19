@@ -4,32 +4,16 @@ const {Schema} = Mongoo;
 
 const projectShema = new Schema({
     id:Schema.Types.ObjectId,
-    libId:{
-        type:String,
-        required:true
-    },
     name:{
         type:String,
         require:true
     },
-    width:{
-        type:Number,
-        required:true
-    },
-    height:{
-        type:Number,
-        required:true
-    },
-    paths:{
-        type:Array,
-        required:true,
-        default:[]
-    },
-    tags:{
-        type:Array,
-        default:[]
-    },
+    desc:String,
     createTime:{
+        type:Date,
+        default:Date.now
+    },
+    updateTime:{
         type:Date,
         default:Date.now
     }

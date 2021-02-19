@@ -35,3 +35,10 @@ export async function updateIcon(id,update){
         queryData = await query.exec();
     return queryData;
 }
+
+export async function updateIcons(icons,update){
+    debugger;
+    let query = iconModel.updateMany(icons,update),
+        queryData = await query.exec();
+    return queryData;
+}

@@ -8,6 +8,10 @@ const iconShema = new Schema({
         type:String,
         required:true
     },
+    projectIds:{
+        type:Array,
+        default:[]
+    },
     name:{
         type:String,
         require:true

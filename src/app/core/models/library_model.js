@@ -15,6 +15,10 @@ const libraryShema = new Schema({
     updateTime:{
         type:Date,
         default:Date.now
+    },
+    maxCode:{
+        type:Number,
+        default:0
     }
 },{
     timestamps: { createdAt: 'createTime', updatedAt: 'updateTime' }

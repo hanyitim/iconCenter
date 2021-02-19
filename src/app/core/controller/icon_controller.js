@@ -24,7 +24,7 @@ export async function iconAdd(ctx){
     }else{
         let {path:filePath, type, libId} = ctx.request.body;
         let icons = await parseFile(filePath, type, libId);
-        let bll = await iconBll.addIcon(icons);
+        let bll = await iconBll.addIcon(icons,libId);
         ctx.body = bll;
     }
 }
@@ -67,11 +67,18 @@ export async function updateIcon(ctx){
 }
 
 export async function iconList(ctx){
+    debugger;
     ctx.check({
-        libId:{
-            in:'params',
+        id:{
+            in:'query',
             notEmpty:true,
             isId:true
+        },
+        type:{
+            in:'query',
+            notEmpty:true,
+            isIconListType:true,
+            isInt:true
         }
     });
     let errors = await ctx.getValidationResult();
@@ -81,7 +88,35 @@ export async function iconList(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await iconBll.iconList(ctx.params.libId);
+        let bll = await iconBll.iconList(ctx.query);
+        ctx.body = bll;
+    }
+}
+
+export async function iconToProjectOperation(ctx){
+    ctx.checkBody({
+        pId:{
+            notEmpty:true,
+            isId:true
+        },
+        iconIds:{
+            notEmpty:true,
+            isArray:true
+        },
+        operation:{
+            notEmpty:true,
+            isInt:true,
+            isOperation:true
+        }
+    });
+    let errors = await ctx.getValidationResult();
+    if(!errors.isEmpty()){
+        ctx.body = {
+            rCode:-1,
+            errors:errors.array()
+        };
+    }else{
+        let bll = await iconBll.iconToProjectOperation(ctx.request.body);
         ctx.body = bll;
     }
 }
