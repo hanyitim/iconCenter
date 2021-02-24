@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 export async function upload(ctx){
+    debugger;
     let {file} = ctx.request.files;
     if(file){
         let renameResult = fs.renameSync(file.path,file.path.replace(/(?<=upload\/)\w*/,file.name));

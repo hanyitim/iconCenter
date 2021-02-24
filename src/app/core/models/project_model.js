@@ -9,6 +9,10 @@ const projectShema = new Schema({
         require:true
     },
     desc:String,
+    icons:{
+        type:Schema.Types.ObjectId,
+        ref:'icon'
+    },
     createTime:{
         type:Date,
         default:Date.now

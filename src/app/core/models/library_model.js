@@ -8,6 +8,22 @@ const libraryShema = new Schema({
     },
     desc:String,
     owner:String,
+    icons:[{
+        icon:{
+            type:Schema.Types.ObjectId,
+            ref:'icon'
+        },
+        properties:{
+            code:{
+                type:Number,
+                defalut:0
+            }
+        }
+    }],
+    maxCode:{
+        type:Number,
+        default:0
+    },
     createTime:{
         type:Date,
         default:Date.now
@@ -15,10 +31,6 @@ const libraryShema = new Schema({
     updateTime:{
         type:Date,
         default:Date.now
-    },
-    maxCode:{
-        type:Number,
-        default:0
     }
 },{
     timestamps: { createdAt: 'createTime', updatedAt: 'updateTime' }

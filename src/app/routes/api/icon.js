@@ -4,8 +4,6 @@ const router = new Router();
 router.prefix('/');
 
 router.post('/icon/add',iconController.iconAdd);
-router.get('/icon/list',iconController.iconList);
-router.post('/icon/:id/update',iconController.updateIcon);
-router.get('/icon/:id/delete',iconController.deleteIcon);
-router.post('/icon/toProject',iconController.iconToProjectOperation);
+router.post('/icon/:_id/update',iconController.updateIcon);
+router.get('/icon/:_id/delete',iconController.deleteIcon);
 export default router;

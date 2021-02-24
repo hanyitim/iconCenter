@@ -4,14 +4,6 @@ const {Schema} = Mongoo;
 
 const iconShema = new Schema({
     id:Schema.Types.ObjectId,
-    libId:{
-        type:String,
-        required:true
-    },
-    projectIds:{
-        type:Array,
-        default:[]
-    },
     name:{
         type:String,
         require:true
@@ -32,10 +24,6 @@ const iconShema = new Schema({
     tags:{
         type:Array,
         default:[]
-    },
-    createTime:{
-        type:Date,
-        default:Date.now
     }
 },{
     timestamps:true

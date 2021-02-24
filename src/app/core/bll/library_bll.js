@@ -1,14 +1,14 @@
-import {libraryDal} from '../dal/index.js';
+import {libraryDal, iconDal} from '../dal/index.js';
 import {validators} from '../../js/utils.js';
 
-export async function addLibrary(library){
-    debugger;
-    let hasLibrary = await libraryDal.findLibrary({name:library.name});
-    if(!hasLibrary || (Array.isArray(hasLibrary) && hasLibrary.length === 0)){
-        let newLibrary = await libraryDal.addLibrary(library);
+export async function addLibrary(data){
+    let {data:library} = await libraryDal.findLibrary({name:data.name});
+    if(!library || (Array.isArray(library) && library.length === 0)){
+        let {data:newLibrary,error} = await libraryDal.addLibrary(data);
         return {
             rCode:0,
-            msg: newLibrary ? '操作成功' : '操作失败'
+            data:newLibrary[0].toObject(),
+            msg: !error ? '操作成功' : '操作失败'
         };
     }else{
         return {
@@ -18,18 +18,18 @@ export async function addLibrary(library){
     }
 }
 
-export async function deleteLibrary(data){
-    if(!validators.isId(data.id)){
+export async function deleteLibrary({_id,name}){
+    if(!validators.isId(_id)){
         return {
             rCode:-1,
-            msg:'library id 无效'
+            msg:'library _id 无效'
         };
     }
-    let library = await libraryDal.findLibrary(data.id);
-    if(library){
+    let {data:[library],error} = await libraryDal.findLibrary({_id});
+    if(library && !error){
         let msg = ''
-        if(library.name === data.name){
-            let result = await libraryDal.deleteLibrary(data.id);
+        if(library.name === name){
+            let result = await libraryDal.deleteLibrary({_id});
             msg = result ? '操作成功' :'操作失败';
         }else{
             msg = '名称不正确';
@@ -41,37 +41,134 @@ export async function deleteLibrary(data){
     }else{
         return {
             rCode:-1,
-            msg:'library not found'
+            msg:'library not found',
+            error
         };
     }
 }
 
-export async function updateLibrary({id,...data}){
-    if(!validators.isId(id)){
+export async function updateLibrary({_id,...update}){
+    if(!validators.isId(_id)){
         return {
             rCode:-1,
-            msg:'library id 无效'
+            msg:'library _id 无效'
         };
     }
-    let library = await libraryDal.findLibrary(id);
-    if(library){
-        await libraryDal.updateLibrary(id,data);
+    let {data:result,error} = await libraryDal.updateLibrary(_id,{$set:update});
+    if(error || result.n === 0){
+        return {
+            rCode:-1,
+            msg:'操作失败',
+            error:error
+        };
+    }else{
         return {
             rCode:0,
             msg:'操作成功'
         };
-    }else{
+    }
+}
+
+export async function libraryList(data){
+    let {data:librarys,error} = await libraryDal.findLibrary(data || {});
+    if(error){
         return {
             rCode:-1,
-            msg:'library not found'
+            error
+        };
+    }else{
+        return {
+            rCode:0,
+            data:librarys
         };
     }
 }
 
-export async function libraryList(body){
-    let librarys = await libraryDal.findLibrary(body || {});
-    return {
-        rCode:0,
-        data:librarys
-    };
+export async function libraryDetail(data){
+    let {data:[library],error} = await libraryDal.findLibraryRef(data);
+    if(error){
+        return {
+            rCode:-1,
+            error
+        };
+    }else{
+        return {
+            rCode:0,
+            data:library
+        };
+    }
+}
+
+export async function iconImport(_id,data){
+    let {data:[library],error} = await libraryDal.findLibrary({_id});
+    if(error || !library){
+        return {
+            rCode:-1,
+            error,
+            msg:'library not found'
+        }
+    }else{
+        let {data:newIcons,error} = await iconDal.addIcons(data);
+        if(!error){
+            let lastCode = library.maxCode,
+                length = newIcons.length,
+                icons = [];
+            newIcons.forEach((icon,index)=>{
+                icons.push({
+                    icon:icon._id,
+                    properties:{
+                        code:parseInt(lastCode) + index + 1
+                    }
+                });
+            });
+            let {data:result,error} = await libraryDal.updateLibrary(_id,{
+                $inc:{maxCode:length},
+                $push:{icons:{$each:icons}}
+            });
+            if(error || result.n === 0){
+                return {
+                    rCode:-1,
+                    msg:'操作失败',
+                    error:error
+                };
+            }else{
+                return {
+                    rCode:0,
+                    msg:'操作成功'
+                };
+            }
+        }else{
+            return {
+                rCode:-1,
+                error
+            };
+        }
+    }
+}
+
+export async function iconRemove(_id,iconId){
+    let {data:[library],error} = await libraryDal.findLibrary({_id});
+    if(error || !library){
+        return {
+            rCode:-1,
+            error,
+            msg:'library not found'
+        }
+    }else{
+        let {data:result,error} = await libraryDal.updateLibrary(_id,{
+            $pull:{icons:{_id:iconId}}
+        });
+        if(error || result.n === 0){
+            return {
+                rCode:-1,
+                msg:'操作失败',
+                error:error
+            };
+        }else{
+            return {
+                rCode:0,
+                msg:'操作成功'
+            };
+        }
+    }
 }
