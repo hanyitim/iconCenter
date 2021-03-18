@@ -26,7 +26,7 @@ const libraryShema = new Schema({
     }],
     maxCode:{
         type:Number,
-        default:5000
+        default:50000
     },
     createTime:{
         type:Date,

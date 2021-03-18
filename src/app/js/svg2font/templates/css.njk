@@ -36,6 +36,6 @@
 }
 {% for item in icons %}
 .icon-{{item.properties.name}}:before{
-    content:"{{item.properties.code}}"
+    content:"\{{(item.properties.code).toString(16)}}"
 }
 {% endfor %}

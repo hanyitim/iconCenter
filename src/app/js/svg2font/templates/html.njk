@@ -17,14 +17,24 @@
     <meta name="full-screen" content="yes" />
     <title></title>
     <link rel="stylesheet" href="./index.css" />
+    <style>
+      *{
+          list-style:none;
+      }
+    </style>
 </head>
 <body>
-    <h2>fontName:{{fontName}}</h2>
+    <h2>字体名:{{fontName}}</h2>
     <ul>
     {% for item in icons %}
     <li>
-        <span class="icon-{{item.properties.name}}"></span>
-        <span>icon-{{item.properties.name}}</span>
+        <p>
+            <span class="icon-{{item.properties.name}}"></span>
+            <span>className:icon-{{item.properties.name}}</span>
+        </p>
+        <p>
+            <span>code:\{{(item.properties.code).toString(16)}}</span>
+        </p>
     </li>
     {% endfor %}
     </ul>
