@@ -4,6 +4,7 @@ import { join as pathJoin } from 'path';
 import svg2ttf from 'svg2ttf';
 import ttf2woff from 'ttf2woff';
 import {transformPath} from '../utils.js';
+import child_process from 'child_process';
 const cwd = process.cwd();
 export class svg2font {
     static env = new nunjucks.Environment(new nunjucks.FileSystemLoader(pathJoin(cwd,'src/app/js/svg2font/templates')));
@@ -60,5 +61,11 @@ export class svg2font {
         this.templeteRender();
         this.ttf();
         this.woff();
+    }
+    getZip(){
+        child_process.execSync(`zip -r ${this.data.fontName}.zip *`, {
+            cwd: this.distDir
+        });
+        return fs.readFileSync(pathJoin(this.distDir,`${this.data.fontName}.zip`));
     }
 }
