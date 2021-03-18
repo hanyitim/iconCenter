@@ -4,10 +4,6 @@ const {Schema} = Mongoo;
 
 const iconShema = new Schema({
     id:Schema.Types.ObjectId,
-    name:{
-        type:String,
-        require:true
-    },
     width:{
         type:Number,
         required:true

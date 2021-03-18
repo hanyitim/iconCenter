@@ -1,5 +1,5 @@
 import {libraryDal, iconDal} from '../dal/index.js';
-import {validators} from '../../js/utils.js';
+import {validators, randomWord} from '../../js/utils.js';
 
 export async function addLibrary(data){
     let {data:library} = await libraryDal.findLibrary({name:data.name});
@@ -117,7 +117,8 @@ export async function iconImport(_id,data){
                 icons.push({
                     icon:icon._id,
                     properties:{
-                        code:parseInt(lastCode) + index + 1
+                        code:parseInt(lastCode) + index + 1,
+                        name:/^[a-zA-Z]+/.test(icon.tags[0]) ? icon.tags[0] : randomWord(8)
                     }
                 });
             });

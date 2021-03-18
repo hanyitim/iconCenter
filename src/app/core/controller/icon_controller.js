@@ -67,7 +67,6 @@ export async function updateIcon(ctx){
 }
 
 export async function iconList(ctx){
-    debugger;
     ctx.check({
         id:{
             in:'query',

@@ -17,12 +17,16 @@ const libraryShema = new Schema({
             code:{
                 type:Number,
                 defalut:0
+            },
+            name:{
+                type:String,
+                defalut:''
             }
         }
     }],
     maxCode:{
         type:Number,
-        default:0
+        default:5000
     },
     createTime:{
         type:Date,

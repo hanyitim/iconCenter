@@ -2,7 +2,6 @@ import {projectDal} from '../dal/index.js';
 import {validators} from '../../js/utils.js';
 
 export async function addProject(project){
-    debugger;
     let hasProject = await projectDal.findProject({name:project.name});
     if(!hasProject || (Array.isArray(hasProject) && hasProject.length === 0)){
         let newProject = await projectDal.addProject(project);

@@ -1,5 +1,4 @@
 import {iconDal} from '../dal/index.js';
-import {OPERATION_BIND, OPERATION_UN_BIND, LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT} from '../../js/config.js';
 
 export async function addIcon(data){
     let {data:newIcons,error} = await iconDal.addIcons(data);

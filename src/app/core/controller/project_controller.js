@@ -1,7 +1,6 @@
 import {projectBll} from '../bll/index.js';
 
 export async function addProject(ctx){
-    debugger;
     ctx.checkBody({
         name:{
             notEmpty: true,

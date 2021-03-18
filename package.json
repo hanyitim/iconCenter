@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env HOST=lizhi.fm nodemon --inspect  ./src/main.js",
-    "start":"npm run dev",
+    "start": "npm run dev",
     "prod": "node -r tsconfig-paths/register ./src/main.js",
     "test": "jest --runInBand",
     "build": "npm run rm-dist && npm run build-ts && npm run copy-static",
@@ -30,7 +30,10 @@
     "koa-views": "^6.2.1",
     "module-alias": "^2.2.2",
     "mongoose": "^5.11.15",
-    "pug": "^2.0.4"
+    "nunjucks": "^3.2.3",
+    "pug": "^2.0.4",
+    "svg2ttf": "^5.1.0",
+    "ttf2woff": "^2.0.1"
   },
   "devDependencies": {
     "apidoc": "^0.17.7",

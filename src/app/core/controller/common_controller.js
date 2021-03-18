@@ -1,7 +1,7 @@
 import fs from 'fs';
+import { commonBll } from '../bll/index.js';
 
 export async function upload(ctx){
-    debugger;
     let {file} = ctx.request.files;
     if(file){
         let renameResult = fs.renameSync(file.path,file.path.replace(/(?<=upload\/)\w*/,file.name));
@@ -26,3 +26,30 @@ export async function upload(ctx){
         };
     }
 };
+
+export async function dist(ctx){
+    ctx.check({
+        'id':{
+            in:'body',
+            isId:true,
+            notEmpty:true
+        },
+        'type':{
+            in:'body',
+            notEmpty:true
+        },
+        'icons':{
+            in:'body'
+        }
+    });
+    let errors = await ctx.getValidationResult();
+    if(!errors.isEmpty()){
+        ctx.body = {
+            rCode:-1,
+            errors:errors.array()
+        };
+    }else{
+        let bll = await commonBll.dist(ctx.request.body);
+        ctx.body = bll;
+    }
+}
