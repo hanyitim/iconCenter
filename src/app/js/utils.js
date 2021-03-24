@@ -3,9 +3,10 @@ import cheerio from 'cheerio';
 import fs from 'fs';
 import { join as pathJoin } from 'path';
 import {OPERATION_BIND, OPERATION_UN_BIND, LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT} from './config.js';
+import { debug } from 'console';
 
 const cwd = process.cwd();
-const baseWidth = 32;
+const baseWidth = 1024;
 
 function parsePath($path,scale){
     let paths = [];
@@ -15,9 +16,9 @@ function parsePath($path,scale){
     });
     return paths;
 }
-export function transformPath(paths,width){
-    return paths.map((path)=>path.replace(/[\d\.]+/g,(num)=>(num * width/baseWidth).toFixed(8)));
-}
+// export function transformPath(paths,width){
+//     return paths.map((path)=>path.replace(/[\d\.]+/g,(num)=>(num * width/baseWidth).toFixed(8)));
+// }
 function parseG($g){
     let tags = [];
     $g.each((index,g)=>{
@@ -47,6 +48,7 @@ function parseType(type){
 export function parseFile(path,type,libraryId){
     let filePath = pathJoin(cwd,'/src/assets/static/',path),
         icons = [];
+    debugger;
     if(fs.existsSync(filePath)){
         let htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'}),
             $ = cheerio.load(htmlStr);
@@ -67,9 +69,26 @@ export function parseFile(path,type,libraryId){
                 });
                 return Promise.resolve(icons);
             }
-            // case 'glyph':{
-            //     let 
-            // }
+            case 'glyph':{
+                debugger;
+                let $font = $('font:first'),
+                    $glyph = $('glyph'),
+                    width = $font.attr('horiz-adv-x'),
+                    height = $font.attr('vert-adv-y') || width;
+                const scale = baseWidth/parseInt(width);
+                $glyph.each((index,glyph)=>{
+                    let {attribs} = glyph;
+                    if(attribs.d && attribs.d.length > 0){
+                        icons.push({
+                            width:baseWidth * scale,
+                            height:parseInt(height) * scale,
+                            paths:[attribs.d],
+                            name:attribs['glyph-name']
+                        })
+                    }
+                });
+                return Promise.resolve(icons);
+            }
         }
     }else{
         return Promise.reject({msg:`${path}，文件不存在`});

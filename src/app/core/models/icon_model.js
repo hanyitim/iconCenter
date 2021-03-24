@@ -20,6 +20,9 @@ const iconShema = new Schema({
     tags:{
         type:Array,
         default:[]
+    },
+    name:{
+        type:String
     }
 },{
     timestamps:true

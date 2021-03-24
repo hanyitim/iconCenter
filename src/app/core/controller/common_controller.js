@@ -1,17 +1,24 @@
 import fs from 'fs';
 import { commonBll } from '../bll/index.js';
+import mineType from '../../js/mimeType.js';
 
 export async function upload(ctx){
     let {file} = ctx.request.files;
     if(file){
-        let renameResult = fs.renameSync(file.path,file.path.replace(/(?<=upload\/)\w*/,file.name));
+        if(!mineType[file.type]){
+            return ctx.body = {
+                rCode:1,
+                msg:'图片格式不合法'
+            };
+        }
+        let renameResult = fs.renameSync(file.path,`${file.path}${mineType[file.type]}`);
         if(renameResult){
             fs.unlinkSync(file.path);
         }
         ctx.body = !renameResult ? {
             rCode:0,
             data:{
-                path:`/upload/${file.name}`,
+                path:`/upload/${file.path.replace(/.*\//g,'')}${mineType[file.type]}`,
                 host:process.env.HOST,
             },
             msg:'success'
@@ -22,7 +29,7 @@ export async function upload(ctx){
     }else{
         ctx.body = {
             rCode:-1,
-            mas:'文件不存在'
+            msg:'文件不存在'
         };
     }
 };

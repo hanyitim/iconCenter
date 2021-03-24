@@ -156,8 +156,35 @@ export async function iconRemove(_id,iconId){
             msg:'library not found'
         }
     }else{
-        let {data:result,error} = await libraryDal.updateLibrary(_id,{
+        let {data:result,error} = await libraryDal.updateLibrary({_id},{
             $pull:{icons:{_id:iconId}}
+        });
+        if(error || result.n === 0){
+            return {
+                rCode:-1,
+                msg:'操作失败',
+                error:error
+            };
+        }else{
+            return {
+                rCode:0,
+                msg:'操作成功'
+            };
+        }
+    }
+}
+
+export async function iconSave(_id,data){
+    let {data:[library],error} = await libraryDal.findLibrary({_id});
+    if(error || !library){
+        return {
+            rCode:-1,
+            error,
+            msg:'library not found'
+        }
+    }else{
+        let {data:result,error} = await libraryDal.updateLibrary({_id,icon},{
+            $set:{icons:{_id:iconId}}
         });
         if(error || result.n === 0){
             return {

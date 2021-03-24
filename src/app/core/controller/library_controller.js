@@ -30,7 +30,7 @@ export async function addLibrary(ctx){
 export async function deleteLibrary(ctx){
     ctx.check({
         _id:{
-            in:'params',
+            in:'query',
             notEmpty: true,
             isId:true
         },
@@ -47,7 +47,7 @@ export async function deleteLibrary(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await libraryBll.deleteLibrary({...ctx.request.query,...ctx.params});
+        let bll = await libraryBll.deleteLibrary(ctx.request.query);
         ctx.body = bll;
     }
 }
@@ -55,10 +55,11 @@ export async function deleteLibrary(ctx){
 export async function updateLibrary(ctx){
     ctx.check({
         _id:{
-            in:'params',
+            in:'query',
             notEmpty: true,
         },
         name:{
+            in:'query',
             isFontName: true
         }
     });
@@ -69,7 +70,7 @@ export async function updateLibrary(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await libraryBll.updateLibrary({...ctx.request.body,...ctx.params});
+        let bll = await libraryBll.updateLibrary(ctx.request.query);
         ctx.body = bll;
     }
 }
@@ -152,6 +153,32 @@ export async function libraryIconRemove(ctx){
         let {iconId} = ctx.request.query,
             {_id} = ctx.params;
         let bll = await libraryBll.iconRemove(_id,iconId);
+        ctx.body = bll;
+    }
+}
+
+export async function libraryIconSave(ctx){
+    ctx.check({
+        '_id':{
+            in:'params',
+            notEmpty: true,
+            isId: true
+        },
+        'iconId':{
+            in:'body',
+            notEmpty:true,
+            isId:true
+        }
+    });
+    let  errors = await ctx.getValidationResult();
+    if(!errors.isEmpty()){
+        ctx.body = {
+            rCode:-1,
+            errors:errors.array()
+        };
+    }else{
+        let {_id} = ctx.params;
+        let bll = await libraryBll.iconSave(_id,ctx.request.query);
         ctx.body = bll;
     }
 }

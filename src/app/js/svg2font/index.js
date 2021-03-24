@@ -3,7 +3,6 @@ import nunjucks from 'nunjucks';
 import { join as pathJoin } from 'path';
 import svg2ttf from 'svg2ttf';
 import ttf2woff from 'ttf2woff';
-import {transformPath} from '../utils.js';
 import child_process from 'child_process';
 const cwd = process.cwd();
 export class svg2font {
@@ -15,10 +14,6 @@ export class svg2font {
     }
     init(){
         let {icons, _id:id, name:fontName} = this.library;
-        icons.forEach((item,index)=>{
-            let paths = [...item.icon.paths];
-            icons[index].icon.paths = transformPath(paths,1024);
-        });
         this.data = {
             icons,
             id,
