@@ -3,7 +3,6 @@ import cheerio from 'cheerio';
 import fs from 'fs';
 import { join as pathJoin } from 'path';
 import {OPERATION_BIND, OPERATION_UN_BIND, LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT} from './config.js';
-import { debug } from 'console';
 
 const cwd = process.cwd();
 const baseWidth = 1024;
@@ -45,54 +44,59 @@ function parseType(type){
     };
 }
 
-export function parseFile(path,type,libraryId){
-    let filePath = pathJoin(cwd,'/src/assets/static/',path),
-        icons = [];
-    debugger;
-    if(fs.existsSync(filePath)){
-        let htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'}),
+export function parseFile(paths,type,libraryId){
+    let icons = [];
+    const parseIcons = (path) => {
+        let filePath = pathJoin(cwd,'/src/assets/static/',path),
+            icons = [];
+        if(fs.existsSync(filePath)){
+            let htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'}),
             $ = cheerio.load(htmlStr);
-        switch(type){
-            case 'svg':{
-                let $svg = $('svg:first'),
-                    $g = $svg.find('g'),
-                    $path = $svg.find('path'),
-                    width = $svg.attr('width'),
-                    height = $svg.attr('height');
-                const scale = baseWidth/parseInt(width);
-                icons.push({
-                    width:baseWidth,
-                    height:parseInt(height) * scale,
-                    paths:parsePath($path,scale),
-                    tags:parseG($g),
-                    libId:libraryId
-                });
-                return Promise.resolve(icons);
+            switch(type){
+                case 'svg':{
+                    let $svg = $('svg:first'),
+                        $g = $svg.find('g'),
+                        $path = $svg.find('path'),
+                        width = $svg.attr('width'),
+                        height = $svg.attr('height');
+                    const scale = baseWidth/parseInt(width);
+                    icons.push({
+                        width:baseWidth,
+                        height:parseInt(height) * scale,
+                        paths:parsePath($path,scale),
+                        tags:parseG($g),
+                        libId:libraryId
+                    });
+                    return icons;
+                }
+                case 'glyph':{
+                    let $font = $('font:first'),
+                        $glyph = $('glyph'),
+                        width = $font.attr('horiz-adv-x'),
+                        height = $font.attr('vert-adv-y') || width;
+                    const scale = baseWidth/parseInt(width);
+                    $glyph.each((index,glyph)=>{
+                        let {attribs} = glyph;
+                        if(attribs.d && attribs.d.length > 0){
+                            icons.push({
+                                width:baseWidth * scale,
+                                height:parseInt(height) * scale,
+                                paths:[attribs.d],
+                                name:attribs['glyph-name']
+                            })
+                        }
+                    });
+                    return icons
+                }
             }
-            case 'glyph':{
-                debugger;
-                let $font = $('font:first'),
-                    $glyph = $('glyph'),
-                    width = $font.attr('horiz-adv-x'),
-                    height = $font.attr('vert-adv-y') || width;
-                const scale = baseWidth/parseInt(width);
-                $glyph.each((index,glyph)=>{
-                    let {attribs} = glyph;
-                    if(attribs.d && attribs.d.length > 0){
-                        icons.push({
-                            width:baseWidth * scale,
-                            height:parseInt(height) * scale,
-                            paths:[attribs.d],
-                            name:attribs['glyph-name']
-                        })
-                    }
-                });
-                return Promise.resolve(icons);
-            }
+        }else{
+            return [];
         }
-    }else{
-        return Promise.reject({msg:`${path}，文件不存在`});
     }
+    paths.forEach((path)=>{
+        icons = icons.concat(parseIcons(path))
+    });
+    return Promise.resolve(icons);
 }
 export const isString = parseType('string');
 export const isObject = parseType('object');

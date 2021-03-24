@@ -118,7 +118,7 @@ export async function iconImport(_id,data){
                     icon:icon._id,
                     properties:{
                         code:parseInt(lastCode) + index + 1,
-                        name:/^[a-zA-Z]+/.test(icon.tags[0]) ? icon.tags[0] : randomWord(8)
+                        name:icon.name || randomWord(8)
                     }
                 });
             });
