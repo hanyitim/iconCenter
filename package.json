@@ -7,8 +7,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env HOST=lizhi.fm nodemon --inspect  ./src/main.js",
-    "start": "npm run dev",
-    "apidoc": "apidoc -i ./src/app/routes -o ./src/app/apidoc/dist -c ./src/app/apidoc"
+    "start": "node ./src/main.js"
   },
   "keywords": [
     "koa"
