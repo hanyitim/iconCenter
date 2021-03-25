@@ -6,8 +6,9 @@
   "description": "koa ts template",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env HOST=lizhi.fm nodemon --inspect  ./src/main.js",
-    "start": "node ./src/main.js"
+    "dev": "nodemon --inspect --exec babel-node ./src/main.js",
+    "start": "npm run dev",
+    "build": "babel src -d dist"
   },
   "keywords": [
     "koa"
@@ -33,6 +34,11 @@
     "ttf2woff": "^2.0.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.10",
+    "@babel/node": "^7.13.12",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.12",
     "apidoc": "^0.17.7",
     "cross-env": "^7.0.3",
     "husky": "^2.7.0",
