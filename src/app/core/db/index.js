@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const mongooseConfig = 'mongodb://127.0.0.1:27017/iconCenter'
+const mongooseConfig =  `mongodb://${ process.env.DB_HOST || '127.0.0.1:27017'}/iconCenter`
 
 
 mongoose.set('useFindAndModify',false);

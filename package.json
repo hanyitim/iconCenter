@@ -2,7 +2,7 @@
   "name": "iconCenter",
   "version": "1.0.0",
   "license": "MIT",
-  "author": "Simple",
+  "author": "yagao",
   "description": "koa ts template",
   "main": "index.js",
   "scripts": {

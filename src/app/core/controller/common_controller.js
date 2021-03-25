@@ -18,8 +18,7 @@ export async function upload(ctx){
         ctx.body = !renameResult ? {
             rCode:0,
             data:{
-                path:`/upload/${file.path.replace(/.*\//g,'')}${mineType[file.type]}`,
-                host:process.env.HOST,
+                path:`/upload/${file.path.replace(/.*\//g,'')}${mineType[file.type]}`
             },
             msg:'success'
         }:{
