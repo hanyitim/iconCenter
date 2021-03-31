@@ -124,7 +124,6 @@ export async function libraryIconImport(ctx){
     }else{
         let {path:filePath, type} = ctx.request.body,
             {_id} = ctx.params;
-        debugger;
         let icons = await parseFile(filePath, type, _id);
         let bll = await libraryBll.iconImport(_id,icons);
         ctx.body = bll;

@@ -15,7 +15,7 @@ const koaCors = async (ctx, next) => {
   if (origin.protocol && origin.host) {
     ctx.set('Access-Control-Allow-Origin', `${origin.protocol}//${origin.host}`);
     ctx.set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE, PUT');
-    ctx.set('Access-Control-Allow-Headers', 'X-Requested-With, User-Agent, Referer, Content-Type, Cache-Control,accesstoken');
+    ctx.set('Access-Control-Allow-Headers', 'X-Requested-With, User-Agent, Referer, Content-Type, Cache-Control,accesstoken,responseType');
     ctx.set('Access-Control-Max-Age', '86400');
     ctx.set('Access-Control-Allow-Credentials', 'true');
   }

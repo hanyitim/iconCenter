@@ -17,12 +17,20 @@ const iconShema = new Schema({
         required:true,
         default:[]
     },
+    mirrorImagePaths:{
+        type:Array,
+        required:true,
+        default:[]
+    },
     tags:{
         type:Array,
         default:[]
     },
     name:{
         type:String
+    },
+    code:{
+        type:Number
     }
 },{
     timestamps:true

@@ -8,12 +8,17 @@ const cwd = process.cwd();
 export class svg2font {
     static env = new nunjucks.Environment(new nunjucks.FileSystemLoader(pathJoin(cwd,'src/app/js/svg2font/templates')));
     static baseDir = pathJoin(cwd,'src/assets/static/dist');
-    constructor(library){
+    constructor(library,filterIconIdList){
         this.library = library;
+        this.filterIconIdList = filterIconIdList;
         this.init();
     }
     init(){
         let {icons, _id:id, name:fontName} = this.library;
+        debugger;
+        if(Array.isArray(this.filterIconIdList)){
+            icons = icons.filter((icon)=>this.filterIconIdList.indexOf(icon._id.toString()) > -1)
+        }
         this.data = {
             icons,
             id,

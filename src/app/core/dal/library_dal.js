@@ -21,7 +21,7 @@ export async function findLibrary(conditions){
     return library;
 }
 
-export async function findLibraryRef(conditions){
+export async function findLibraryRef(...conditions){
     let library = await dbHelper.findDataPopulation(libraryModel,conditions,{path:'icons.icon', select:'-createdAt -updatedAt'});
     return library;
 }

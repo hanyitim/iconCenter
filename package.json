@@ -6,7 +6,7 @@
   "description": "koa ts template",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --inspect --exec babel-node ./src/main.js",
+    "dev": "nodemon --inspect ./src/main.js",
     "start": "npm run dev",
     "build": "babel src -d dist"
   },
@@ -31,6 +31,7 @@
     "nunjucks": "^3.2.3",
     "pug": "^2.0.4",
     "svg2ttf": "^5.1.0",
+    "svgpath": "^2.3.1",
     "ttf2woff": "^2.0.1"
   },
   "devDependencies": {

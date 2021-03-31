@@ -114,16 +114,24 @@ export async function iconImport(_id,data){
                 length = newIcons.length,
                 icons = [];
             newIcons.forEach((icon,index)=>{
-                icons.push({
+                let newIcon = {
                     icon:icon._id,
                     properties:{
-                        code:parseInt(lastCode) + index + 1,
+                        code: parseInt(lastCode) + index + 1,
                         name:icon.name || randomWord(8)
                     }
-                });
+                }
+                if(icon.code){
+                    newIcon.properties.code = icon.code;
+                    lastCode = parseInt(icon.code);
+                }
+                icons.push(newIcon);
             });
-            let {data:result,error} = await libraryDal.updateLibrary(_id,{
+            let {data:result,error} = await libraryDal.updateLibrary(_id,data.type === 'svg' ? {
                 $inc:{maxCode:length},
+                $push:{icons:{$each:icons}}
+            } : {
+                $set:{maxCode:lastCode},
                 $push:{icons:{$each:icons}}
             });
             if(error || result.n === 0){

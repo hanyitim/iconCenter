@@ -3,6 +3,7 @@ import cheerio from 'cheerio';
 import fs from 'fs';
 import { join as pathJoin } from 'path';
 import {OPERATION_BIND, OPERATION_UN_BIND, LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT} from './config.js';
+import svgpath from 'svgpath';
 
 const cwd = process.cwd();
 const baseWidth = 1024;
@@ -15,9 +16,9 @@ function parsePath($path,scale){
     });
     return paths;
 }
-// export function transformPath(paths,width){
-//     return paths.map((path)=>path.replace(/[\d\.]+/g,(num)=>(num * width/baseWidth).toFixed(8)));
-// }
+function mirrorImagePath(paths,height){
+    return paths.map((path)=>svgpath(path).matrix([1,0,0,-1,0,0]).matrix([1,0,0,1,0,height]).toString());
+}
 function parseG($g){
     let tags = [];
     $g.each((index,g)=>{
@@ -50,8 +51,16 @@ export function parseFile(paths,type,libraryId){
         let filePath = pathJoin(cwd,'/src/assets/static/',path),
             icons = [];
         if(fs.existsSync(filePath)){
-            let htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'}),
-            $ = cheerio.load(htmlStr);
+            let htmlStr,
+                $,
+                selection;
+            if(type !== 'json'){
+                htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'});
+                $ = cheerio.load(htmlStr);
+            }else{
+                debugger;
+                selection = fs.readFileSync(filePath,{encoding:'utf-8'});
+            }
             switch(type){
                 case 'svg':{
                     let $svg = $('svg:first'),
@@ -60,20 +69,22 @@ export function parseFile(paths,type,libraryId){
                         width = $svg.attr('width'),
                         height = $svg.attr('height');
                     const scale = baseWidth/parseInt(width);
+                    let paths = parsePath($path,scale);
                     icons.push({
                         width:baseWidth,
                         height:parseInt(height) * scale,
-                        paths:parsePath($path,scale),
+                        paths,
+                        mirrorImagePaths:mirrorImagePath(paths,height),
                         tags:parseG($g),
                         libId:libraryId
                     });
                     return icons;
                 }
                 case 'glyph':{
-                    let $font = $('font:first'),
+                    let $fontface = $('font-face:first'),
                         $glyph = $('glyph'),
-                        width = $font.attr('horiz-adv-x'),
-                        height = $font.attr('vert-adv-y') || width;
+                        width = $fontface.attr('units-per-em'),
+                        height = width;
                     const scale = baseWidth/parseInt(width);
                     $glyph.each((index,glyph)=>{
                         let {attribs} = glyph;
@@ -82,11 +93,31 @@ export function parseFile(paths,type,libraryId){
                                 width:baseWidth * scale,
                                 height:parseInt(height) * scale,
                                 paths:[attribs.d],
-                                name:attribs['glyph-name']
+                                mirrorImagePaths:mirrorImagePath([attribs.d],parseInt(height) * scale),
+                                name:attribs['glyph-name'],
+                                code: attribs['unicode'] ? attribs['unicode'].charCodeAt() : null
                             })
                         }
                     });
                     return icons
+                }
+                case 'json':{
+                    let data = JSON.parse(selection);
+                    if(data && data.icons){
+                        let {icons:iconList,height} = data;
+                        icons = iconList.map(({icon,properties})=>{
+                            return {
+                                width:height,
+                                height,
+                                paths:icon.paths,
+                                mirrorImagePaths:mirrorImagePath(icon.paths,height),
+                                tags:icon.tags,
+                                code:properties.code,
+                                name:properties.name
+                            };
+                        });
+                    }
+                    return icons;
                 }
             }
         }else{

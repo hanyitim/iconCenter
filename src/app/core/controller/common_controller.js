@@ -8,7 +8,7 @@ export async function upload(ctx){
         if(!mineType[file.type]){
             return ctx.body = {
                 rCode:1,
-                msg:'图片格式不合法'
+                msg:'资源格式不合法'
             };
         }
         let renameResult = fs.renameSync(file.path,`${file.path}${mineType[file.type]}`);
