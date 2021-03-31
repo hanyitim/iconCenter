@@ -15,7 +15,6 @@ export class svg2font {
     }
     init(){
         let {icons, _id:id, name:fontName} = this.library;
-        debugger;
         if(Array.isArray(this.filterIconIdList)){
             icons = icons.filter((icon)=>this.filterIconIdList.indexOf(icon._id.toString()) > -1)
         }
@@ -36,6 +35,9 @@ export class svg2font {
         this.dist();
     }
     createDir(){
+        if(!fs.existsSync(svg2font.baseDir)){
+            fs.mkdirSync(svg2font.baseDir);
+        }
         if(!fs.existsSync(this.distDir)){
             fs.mkdirSync(this.distDir);
             fs.mkdirSync(pathJoin(this.distDir,'fonts'));
