@@ -63,9 +63,9 @@ export class svg2font {
         this.woff();
     }
     getZip(){
-        child_process.execSync(`zip -r ${this.data.fontName}.zip *`, {
+        child_process.execSync(`tar czvf ${this.data.fontName}.tar.gz *`, {
             cwd: this.distDir
         });
-        return fs.readFileSync(pathJoin(this.distDir,`${this.data.fontName}.zip`));
+        return fs.readFileSync(pathJoin(this.distDir,`${this.data.fontName}.tar.gz`));
     }
 }
