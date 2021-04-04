@@ -31,6 +31,14 @@ const iconShema = new Schema({
     },
     code:{
         type:Number
+    },
+    libId:{
+        type:String,
+        default:''
+    },
+    projectIds:{
+        type:Array,
+        default:[]
     }
 },{
     timestamps:true

@@ -35,7 +35,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 {% for item in icons %}
-.icon-{{item.properties.name}}:before{
-    content:"\{{(item.properties.code).toString(16)}}"
+.icon-{{item.name}}:before{
+    content:"\{{(item.code).toString(16)}}"
 }
 {% endfor %}

@@ -40,8 +40,9 @@ export async function dist(ctx){
             isId:true,
             notEmpty:true
         },
-        'type':{
+        'fontName':{
             in:'body',
+            isFontName:true,
             notEmpty:true
         },
         'icons':{
@@ -55,7 +56,7 @@ export async function dist(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await commonBll.dist(ctx.request.body);
+        let bll = await commonBll.dist({...ctx.request.body,type:0});
         ctx.body = bll;
     }
 }

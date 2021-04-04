@@ -8,22 +8,6 @@ const libraryShema = new Schema({
     },
     desc:String,
     owner:String,
-    icons:[{
-        icon:{
-            type:Schema.Types.ObjectId,
-            ref:'icon'
-        },
-        properties:{
-            code:{
-                type:Number,
-                defalut:0
-            },
-            name:{
-                type:String,
-                defalut:''
-            }
-        }
-    }],
     maxCode:{
         type:Number,
         default:50000

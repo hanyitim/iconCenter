@@ -32,7 +32,7 @@ export async function iconAdd(ctx){
 export async function deleteIcon(ctx){
     ctx.check({
         id:{
-            in:'params',
+            in:'query',
             notEmpty: true,
         }
     });
@@ -43,14 +43,14 @@ export async function deleteIcon(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await iconBll.deleteIcon(ctx.params.id);
+        let bll = await iconBll.deleteIcon(ctx.query.id);
         ctx.body = bll;
     }
 }
 export async function updateIcon(ctx){
     ctx.check({
-        id:{
-            in:'params',
+        _id:{
+            in:'body',
             notEmpty: true,
         }
     });
@@ -61,7 +61,7 @@ export async function updateIcon(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await iconBll.updateIcon({...ctx.request.body,...ctx.params});
+        let bll = await iconBll.updateIcon({...ctx.request.body});
         ctx.body = bll;
     }
 }
@@ -80,6 +80,7 @@ export async function iconList(ctx){
             isInt:true
         }
     });
+    
     let errors = await ctx.getValidationResult();
     if(!errors.isEmpty()){
         ctx.body = {
@@ -93,16 +94,19 @@ export async function iconList(ctx){
 }
 
 export async function iconToProjectOperation(ctx){
-    ctx.checkBody({
+    ctx.check({
         pId:{
+            in:'query',
             notEmpty:true,
             isId:true
         },
         iconIds:{
+            in:'query',
             notEmpty:true,
             isArray:true
         },
         operation:{
+            in:'query',
             notEmpty:true,
             isInt:true,
             isOperation:true
@@ -120,4 +124,30 @@ export async function iconToProjectOperation(ctx){
     }
 }
 
+export async function iconImport(ctx){
+    ctx.checkBody({
+        'type':{
+            notEmpty: true
+        },
+        'path':{
+            notEmpty: true
+        },
+        'libId':{
+            notEmpty: true,
+            isId: true
+        }
+    });
+    let  errors = await ctx.getValidationResult();
+    if(!errors.isEmpty()){
+        ctx.body = {
+            rCode:-1,
+            errors:errors.array()
+        };
+    }else{
+        let {path:filePath, type, libId} = ctx.request.body;
+        let icons = await parseFile(filePath, type, libId);
+        let bll = await iconBll.iconImport(libId,icons);
+        ctx.body = bll;
+    }
+}
 

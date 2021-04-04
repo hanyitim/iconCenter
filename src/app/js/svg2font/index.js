@@ -8,26 +8,19 @@ const cwd = process.cwd();
 export class svg2font {
     static env = new nunjucks.Environment(new nunjucks.FileSystemLoader(pathJoin(cwd,'src/app/js/svg2font/templates')));
     static baseDir = pathJoin(cwd,'src/assets/static/dist');
-    constructor(library,filterIconIdList){
-        this.library = library;
-        this.filterIconIdList = filterIconIdList;
+    constructor({icons, fontName}){
+        this.data = {
+            icons,
+            fontName
+        };
         this.init();
     }
     init(){
-        let {icons, _id:id, name:fontName} = this.library;
-        if(Array.isArray(this.filterIconIdList)){
-            icons = icons.filter((icon)=>this.filterIconIdList.indexOf(icon._id.toString()) > -1)
-        }
-        this.data = {
-            icons,
-            id,
-            fontName
-        };
-        this.distDir = pathJoin(svg2font.baseDir,`${fontName}${Date.now()}`);
+        this.distDir = pathJoin(svg2font.baseDir,`${this.data.fontName}${Date.now()}`);
         this.distTree = {
-            svg:pathJoin(this.distDir,`./fonts/${fontName}.svg`),
-            ttf:pathJoin(this.distDir,`./fonts/${fontName}.ttf`),
-            woff:pathJoin(this.distDir,`./fonts/${fontName}.woff`),
+            svg:pathJoin(this.distDir,`./fonts/${this.data.fontName}.svg`),
+            ttf:pathJoin(this.distDir,`./fonts/${this.data.fontName}.ttf`),
+            woff:pathJoin(this.distDir,`./fonts/${this.data.fontName}.woff`),
             html:pathJoin(this.distDir,'index.html'),
             css:pathJoin(this.distDir,'index.css'),
         }

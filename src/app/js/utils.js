@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import cheerio from 'cheerio';
 import fs from 'fs';
 import { join as pathJoin } from 'path';
-import {OPERATION_BIND, OPERATION_UN_BIND, LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT} from './config.js';
+import {OPERATION_BIND, OPERATION_UN_BIND, LIST_BY_LIBRARYID, LIST_BY_PROJECTID} from './config.js';
 import svgpath from 'svgpath';
 
 const cwd = process.cwd();
@@ -31,7 +31,7 @@ function customValidators(){
     const isId = (value)=>mongoose.Types.ObjectId.isValid(value);
     const isFontName = (value)=>/[a-zA-Z0-9\_]+/.test(value);
     const isOperation = (value)=> [OPERATION_BIND,OPERATION_UN_BIND].indexOf(parseInt(value)) > -1;
-    const isIconListType = (value) => [LIST_TYPE_LIBRARY, LIST_TYPE_PROJECT].indexOf(parseInt(value)) > -1;
+    const isIconListType = (value) => [LIST_BY_LIBRARYID, LIST_BY_PROJECTID].indexOf(parseInt(value)) > -1;
     return {
         isId,
         isFontName,
@@ -58,7 +58,7 @@ export function parseFile(paths,type,libraryId){
                 htmlStr = fs.readFileSync(filePath,{encoding:'utf-8'});
                 $ = cheerio.load(htmlStr);
             }else{
-                debugger;
+                
                 selection = fs.readFileSync(filePath,{encoding:'utf-8'});
             }
             switch(type){
@@ -76,7 +76,9 @@ export function parseFile(paths,type,libraryId){
                         paths,
                         mirrorImagePaths:mirrorImagePath(paths,height),
                         tags:parseG($g),
-                        libId:libraryId
+                        libId:libraryId,
+                        name:randomWord(8),
+                        projectIds:[]
                     });
                     return icons;
                 }
@@ -94,8 +96,9 @@ export function parseFile(paths,type,libraryId){
                                 height:parseInt(height) * scale,
                                 paths:[attribs.d],
                                 mirrorImagePaths:mirrorImagePath([attribs.d],parseInt(height) * scale),
-                                name:attribs['glyph-name'],
-                                code: attribs['unicode'] ? attribs['unicode'].charCodeAt() : null
+                                name:attribs['glyph-name'] || randomWord(8),
+                                code: attribs['unicode'] ? attribs['unicode'].charCodeAt() : null,
+                                projectIds:[]
                             })
                         }
                     });
@@ -113,7 +116,9 @@ export function parseFile(paths,type,libraryId){
                                 mirrorImagePaths:mirrorImagePath(icon.paths,height),
                                 tags:icon.tags,
                                 code:properties.code,
-                                name:properties.name
+                                name:properties.name || randomWord(8),
+                                projectIds:[],
+                                libId:libraryId
                             };
                         });
                     }
@@ -134,7 +139,7 @@ export const isObject = parseType('object');
 export const validators = customValidators();
 
 
-export const randomWord = (length)=>{
+export function randomWord(length){
     let words = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
         wordsLength = words.length
     let word = '',

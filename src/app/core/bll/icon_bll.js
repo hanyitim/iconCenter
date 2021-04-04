@@ -1,4 +1,5 @@
-import {iconDal} from '../dal/index.js';
+import {iconDal, libraryDal} from '../dal/index.js';
+import {validators} from '../../js/utils.js';
 
 export async function addIcon(data){
     let {data:newIcons,error} = await iconDal.addIcons(data);
@@ -18,7 +19,7 @@ export async function addIcon(data){
 
 
 export async function deleteIcon(id){
-    let icon = await iconDal.findIcon(id);
+    let icon = await iconDal.findIcons({icons:[id]});
     console.log(icon);
     if(icon){
         let result = await iconDal.deleteIcon(id);
@@ -54,5 +55,66 @@ export async function updateIcon({_id,...update}){
             rCode:0,
             msg:'操作成功'
         };
+    }
+}
+
+export async function iconImport(_id,data){
+    let {data:[library],error} = await libraryDal.findLibrary({_id});
+    if(error || !library){
+        return {
+            rCode:-1,
+            error,
+            msg:'library not found'
+        }
+    }else{
+        // let {data:newIcons,error} = await iconDal.addIcons(data);
+        let lastCode = library.maxCode,
+            icons = [];
+        
+        data.forEach((icon)=>{
+            if(icon.code){
+                lastCode = Math.max(lastCode,parseInt(icon.code));
+            }else{
+                lastCode +=1;
+                icon.code;
+            }
+            icons.push(icon);
+        });
+        let {error:iconError} = await iconDal.addIcons(data);
+        if(iconError){
+            return {
+                rCode:-1,
+                error:iconError
+            };
+        }
+        let {data:result,error} = await libraryDal.updateLibrary(_id,{$set:{maxCode:lastCode}});
+        if(error || result.n === 0){
+            return {
+                rCode:-1,
+                msg:'操作失败',
+                error:error
+            };
+        }else{
+            return {
+                rCode:0,
+                msg:'操作成功'
+            };
+        }
+    }
+}
+
+export async function iconList(data){
+    
+    let {data:list,error} = await iconDal.findIcons(data);
+    if(error){
+        return {
+            rCode:-1,
+            error
+        }
+    }else{
+        return {
+            rCode:0,
+            data:list
+        }
     }
 }

@@ -13,7 +13,7 @@ function factory(comand){
 
 export async function findDataPopulation(model,conditions,path){
     let body = {}
-    debugger;
+    
     try{
         let dbData = await model.find(...conditions).populate(path);
         body.data = dbData;

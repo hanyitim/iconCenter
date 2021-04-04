@@ -8,6 +8,6 @@
 <missing-glyph horiz-adv-x="1024" />
 {% for item in icons %}
 <glyph
-    glyph-name="{{item.properties.name}}" unicode="&#x{{(item.properties.code).toString(16)}};" d="{{item.icon.mirrorImagePaths.join('')}}" />
+    glyph-name="{{item.name}}" unicode="&#x{{(item.code).toString(16)}};" d="{{item.mirrorImagePaths.join('')}}" />
 {% endfor %}
 </font></defs></svg>
