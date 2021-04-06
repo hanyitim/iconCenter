@@ -46,7 +46,11 @@ export async function dist(ctx){
             notEmpty:true
         },
         'icons':{
-            in:'body'
+            in:'body',
+        },
+        'type':{
+            in:'body',
+            notEmpty:true
         }
     });
     let errors = await ctx.getValidationResult();
@@ -56,7 +60,7 @@ export async function dist(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await commonBll.dist({...ctx.request.body,type:0});
+        let bll = await commonBll.dist({...ctx.request.body});
         ctx.body = bll;
     }
 }

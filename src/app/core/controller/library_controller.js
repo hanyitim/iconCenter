@@ -55,11 +55,11 @@ export async function deleteLibrary(ctx){
 export async function updateLibrary(ctx){
     ctx.check({
         _id:{
-            in:'query',
+            in:'body',
             notEmpty: true,
         },
         name:{
-            in:'query',
+            in:'body',
             isFontName: true
         }
     });
@@ -70,7 +70,7 @@ export async function updateLibrary(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await libraryBll.updateLibrary(ctx.request.query);
+        let bll = await libraryBll.updateLibrary(ctx.request.body);
         ctx.body = bll;
     }
 }

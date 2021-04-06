@@ -114,7 +114,7 @@ export function parseFile(paths,type,libraryId){
                                 height,
                                 paths:icon.paths,
                                 mirrorImagePaths:mirrorImagePath(icon.paths,height),
-                                tags:icon.tags,
+                                tags:icon.tags.join(','),
                                 code:properties.code,
                                 name:properties.name || randomWord(8),
                                 projectIds:[],

@@ -28,6 +28,7 @@ export async function findIcons({id, icons:iconIds, type}){
                 }
         }
     }
+    console.log(getConditions());
     let icons = await dbHelper.findData(iconModel,getConditions());
     
     return icons;

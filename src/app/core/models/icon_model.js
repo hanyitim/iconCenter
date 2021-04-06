@@ -23,8 +23,8 @@ const iconShema = new Schema({
         default:[]
     },
     tags:{
-        type:Array,
-        default:[]
+        type:String,
+        default:''
     },
     name:{
         type:String
