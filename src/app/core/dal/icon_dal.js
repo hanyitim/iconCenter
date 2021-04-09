@@ -1,6 +1,7 @@
 import {iconModel} from '../models/index.js';
 import * as dbHelper from './dbHelper.js';
 import {LIST_BY_PROJECTID, LIST_BY_LIBRARYID, LIST_BY_ICONID} from '../../js/config.js';
+import {isObject} from '../../js/utils.js';
 
 export async function addIcons(icons){
     let newIcons = await dbHelper.addData(iconModel,icons);
@@ -8,6 +9,9 @@ export async function addIcons(icons){
 }
 
 export async function findIcons({id, icons:iconIds, type}){
+    if(isObject(iconIds)){
+        iconIds = Object.values(iconIds);
+    }
     const getConditions = ()=>{
         switch(type - 0){
             case LIST_BY_LIBRARYID:

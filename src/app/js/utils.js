@@ -10,7 +10,7 @@ const baseWidth = 1024;
 
 function parsePath($path,scale){
     let paths = [];
-    $path.each((index,path)=>{
+    $path.forEach((path)=>{
         let d = path.attribs.d;
         paths.push(d.replace(/[\d\.]+/g,(num)=>(num * scale).toFixed(8)));
     });
@@ -92,13 +92,15 @@ export function parseFile(paths,type,libraryId){
                         let {attribs} = glyph;
                         if(attribs.d && attribs.d.length > 0){
                             icons.push({
-                                width:baseWidth * scale,
+                                width:baseWidth,
                                 height:parseInt(height) * scale,
-                                paths:[attribs.d],
+                                paths:parsePath([glyph],scale),
+                                // paths:parsePath([attribs.d],scale),
                                 mirrorImagePaths:mirrorImagePath([attribs.d],parseInt(height) * scale),
                                 name:attribs['glyph-name'] || randomWord(8),
                                 code: attribs['unicode'] ? attribs['unicode'].charCodeAt() : null,
-                                projectIds:[]
+                                projectIds:[],
+                                libId:libraryId
                             })
                         }
                     });
