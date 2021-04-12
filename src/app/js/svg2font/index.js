@@ -8,10 +8,11 @@ const cwd = process.cwd();
 export class svg2font {
     static env = new nunjucks.Environment(new nunjucks.FileSystemLoader(pathJoin(cwd,'src/app/js/svg2font/templates')));
     static baseDir = pathJoin(cwd,'src/assets/static/dist');
-    constructor({icons, fontName}){
+    constructor({icons, fontName, prefix}){
         this.data = {
             icons,
-            fontName
+            fontName,
+            prefix
         };
         this.init();
     }

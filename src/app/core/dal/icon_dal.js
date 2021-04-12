@@ -48,3 +48,8 @@ export async function updateIcon(_id, update){
     let icon = await dbHelper.updateData(iconModel,{_id},{$set:update});
     return icon;
 }
+
+export async function abandonIcon(isRemove){
+    let icon = isRemove ? await dbHelper.removeData(iconModel,{libId:{$exists:false}}) : await dbHelper.findData(iconModel,{libId:{$exists:false}});
+    return icon;
+}

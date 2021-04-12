@@ -51,6 +51,9 @@ export async function dist(ctx){
         'type':{
             in:'body',
             notEmpty:true
+        },
+        'prefix':{
+            in:'body'
         }
     });
     let errors = await ctx.getValidationResult();

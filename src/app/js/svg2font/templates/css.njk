@@ -10,7 +10,7 @@
     font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="{{prefix}}"], [class*=" {{prefix}}"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: '{{fontName}}' !important;
     speak: none;
@@ -35,7 +35,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 {% for item in icons %}
-.icon-{{item.name}}:before{
+.{{prefix+item.name}}:before{
     content:"\{{(item.code).toString(16)}}"
 }
 {% endfor %}

@@ -33,7 +33,6 @@ export async function deleteIcon(id){
             msg:'icon not found'
         };
     }
-
 }
 
 export async function updateIcon({_id,...update}){
@@ -115,6 +114,36 @@ export async function iconList(data){
         return {
             rCode:0,
             data:list
+        }
+    }
+}
+
+export async function iconAbandon({remove}){
+    let {data:result,error} = await iconDal.abandonIcon(remove);
+    if(remove){
+        if(error || result.n === 0){
+            return {
+                rCode:-1,
+                msg:'操作失败',
+                error:error
+            };
+        }else{
+            return {
+                rCode:0,
+                msg:'操作成功'
+            };
+        }
+    }else{
+        if(error){
+            return {
+                rCode:-1,
+                error
+            }
+        }else{
+            return {
+                rCode:0,
+                data:result
+            }
         }
     }
 }

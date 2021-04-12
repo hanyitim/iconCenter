@@ -150,4 +150,8 @@ export async function iconImport(ctx){
         ctx.body = bll;
     }
 }
+export async function iconAbandon(ctx){
+    let bll = await iconBll.iconAbandon(ctx.request.body);
+    ctx.body = bll;
+}
 
