@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" style="font-size: 10px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="wap-font-scale" content="no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="Keywords" content=""/>
+    <!-- QQ -->
+    <meta name="x5-fullscreen" content="true" />
+    <!-- UC -->
+    <meta name="full-screen" content="yes" />
+    <title>包裹</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script>
+        resize();
+        function resize(){
+            var viewWidth = window.innerWidth || document.documentElement.clientWidth || 375,
+                baseFontSize = 10,
+                thisFontSize = Math.min((viewWidth/375 * baseFontSize).toFixed(2),10);
+            document.documentElement.style.fontSize = thisFontSize + 'px';
+        }
+        window.addEventListener('resize',resize);
+        // ;(function () {
+        //     var src = '//cdn.jsdelivr.net/npm/eruda';
+        //     if (/eruda=true/.test(window.location) || '<%= ENV %>'  !== 'prod'){
+        //         document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+        //         document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
+        //     }
+        // })();
+    </script>
+</body>
+</html>

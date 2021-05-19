@@ -1,0 +1,78 @@
+#app{
+    height: 100%;
+    overflow: hidden;
+}
+.page{
+    display: flex;
+    height: 100%;
+}
+.center{
+    flex: 1;
+}
+#app{
+    .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+        background-color: rgba(4,51,255,0.050);
+    }
+    .ant-menu-item-selected a{
+        color: #0433ff;
+        font-size: 17px;
+    }
+    .ant-menu-item a:hover{
+        color: #0433ff;
+    }
+    .ant-menu-vertical .ant-menu-item{
+        height: 56px;
+        line-height: 56px;
+        border-radius: 11px;
+        overflow: hidden;
+    }
+    .ant-menu{
+        margin: 0 12px;
+    }
+    .ant-badge{
+        color: #fff;
+    }
+    .ant-menu-vertical{
+        border-width: 0px;
+    }
+    .ant-input,.ant-select,.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+        border-radius: 8px;
+        border-color: #ebebeb;
+    }
+    .btn{
+        display: block;
+        border-radius: 8px;
+        line-height: 40px;
+        height: 40px;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.5);
+        background-color: #fff;
+        box-sizing: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        &[data-type="primary"]{
+            color: #fff;
+            background-color: #0433ff;
+        }
+        &[data-type="danger"]{
+            color: #fff;
+            background-color: #ff2f92;
+        }
+        &[data-loading="true"]{
+            opacity: 0.3;
+            pointer-events: none;
+            &:after{
+                content: '';
+                display: inline-block;
+                box-shadow: 2px 0 #fff, 6px 0 #fff, 10px 0 #fff;
+                animation: dot 2s infinite step-start both;
+                min-width: 2px; 
+                min-height: 2px;
+            }
+        }
+    }
+}
+@keyframes dot {
+    25% { box-shadow: none; }                                 
+    50% { box-shadow: 2px 0 currentColor; }                   
+    75% { box-shadow: 2px 0 currentColor, 6px 0 currentColor;}
+}

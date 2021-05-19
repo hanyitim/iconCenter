@@ -1,0 +1,180 @@
+.page{
+    height: 100%;
+    display: flex;
+    flex-direction: column;;
+}
+.header{
+    background-color: rgba(255,255,255,0.72);
+    height: 80px;
+    display: flex;
+    padding: 0 24px;
+    .libraryInfo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 80px;
+        margin-right: 10px;
+        .name{
+            font-size: 20px;
+            line-height: 25px;
+            height: 25px;
+            font-weight: 700;
+        }
+        .count{
+            color: rgba(0, 0, 0, 0.3);
+        }
+    }
+    .switchBox{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        .switch{
+            height: 48px;
+            width: 120px;
+            border-radius: 8px;
+            background-color: #ebebeb;
+            display: flex;
+            position: relative;
+            z-index: 0;
+            padding: 4px;
+            box-sizing: border-box;
+            .switchBtn{
+                display: block;
+                flex: 1;
+                color: rgba(0, 0, 0, 0.3);
+                line-height: 40px;
+                border-radius: 6px;
+                text-align: center;
+                font-size: 24px;
+                *{
+                    pointer-events: none;
+                }
+            }
+            .line{
+                position: absolute;
+                z-index: -1;
+                width: 56px;
+                height: 40px;
+                background-color: #fff;
+                border-radius: 6px;
+                top: 4px;
+                left: 4px;
+                display: block;
+                transform: translate3d(0,0,0);
+                transition: all 0.1s linear;
+            }
+            &[data-edit="true"]{
+                .line{
+                    transform: translate3d(100%,0,0);
+                }
+                .switchBtn:nth-child(2){
+                    color: #000;
+                }
+            }
+            &[data-edit="false"]{
+                .line{
+                    transform: translate3d(0,0,0);
+                }
+                .switchBtn:nth-child(1){
+                    color: #000;
+                }
+            }
+        }
+    }
+    .operationBox{
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        .btnImport{
+            width: 100px;
+        }
+    }
+}
+.content{
+    display: flex;
+    height: calc(100% - 80px);
+}
+.list{
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y:scroll;
+    padding: 10px 0px 10px 10px;
+    height: 100%;
+    box-sizing: border-box;
+    .iconBox{
+        float: left;
+        margin-bottom: 10px;
+        padding-right: 10px;
+        *{
+            pointer-events: none;
+        }
+    }
+    .icon{
+        width: 60px;
+        height: 60px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+        margin: 0 auto;
+        border: 2px solid transparent;
+        box-sizing: border-box;
+        &.selected{
+            border-color: #0433ff;
+        }
+    }
+}
+.panel{
+    width: 25%;
+    max-width: 250px;
+    height: 100%;
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 20px;
+}
+.edit{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .operation{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+}
+.info{
+    height: 40px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.editPath{
+    padding: 20px 0;
+    .svgBox{
+        box-sizing: border-box;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        width: 100%;
+        padding-bottom: 100%;
+        position: relative;
+        svg{
+            position: absolute;
+            left: 2.5%;
+            top: 2.5%;
+            width: 95%;
+            height: 95%;
+        }
+    }
+}
+.mt{
+    margin-top: 20px;
+}
+.mb{
+    margin-bottom: 20px;
+}

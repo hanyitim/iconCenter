@@ -1,0 +1,76 @@
+.sider{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header{
+    height: 80px;
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+    font-size: 28px;
+    .logo{
+        width: 48px;
+        height: 48px;
+        overflow: hidden;
+        border-radius: 24px;
+        background-color: #0433ff;
+        color: #fff;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        margin-right: 12px;
+        margin-left: 24px;
+    }
+}
+.sliderModule{
+    &:before{
+        content: attr(data-title);
+        display: block;
+        padding: 0 12px;
+        color: rgba(0, 0, 0, 0.3);
+        margin-top: 20px;
+    }
+}
+.aside{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    .btnAddLibrary{
+        display: block;
+        line-height: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0 24px;
+        background-color: rgba(245,245,245,0.50);
+        color: #000;
+        font-size: 24px;
+    }
+}
+.operatList{
+    position: fixed;
+    width: 145px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 8px;
+    box-sizing: border-box;
+    backdrop-filter: blur(50px);
+    box-shadow: 0 2px 40px 0 rgba(0, 0, 0, 0.2);
+    li{
+        height: 44px;
+        line-height: 44px;
+        padding: 0 16px;
+        border-radius: 12px;
+        overflow: hidden;
+        &:hover{
+            background-color: rgba(4,51,255,0.050);
+            color: #0433ff;
+        }
+    }
+}
