@@ -240,6 +240,7 @@ export default class MySider extends Component{
                             onClick={this.handleMenuClick}
                             selectedKeys={selectedKeys}
                             onContextMenu={this.contextMenu}
+                            className={style.list}
                         >
                             {
                                 libraryList.map((library,index)=>(
@@ -256,8 +257,9 @@ export default class MySider extends Component{
                         <Menu 
                             mode="vertical" 
                             onClick={this.handleMenuClick}
-                            // selectedKeys={selectedKeys}
+                            selectedKeys={selectedKeys}
                             onContextMenu={this.contextMenu}
+                            className={style.list}
                         >
                             {
                                 projectList.map((project,index)=>(

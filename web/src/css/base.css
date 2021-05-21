@@ -15,6 +15,6 @@ iframe{
     list-style: none;
     user-select: none;
 }
-::-webkit-scrollba{
-    width: 2px;
+::-webkit-scrollbar{
+    width: 0px;
 }

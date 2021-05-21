@@ -1,6 +1,4 @@
 .sider{
-    display: flex;
-    flex-direction: column;
     height: 100%;
 }
 
@@ -27,7 +25,7 @@
     }
 }
 .sliderModule{
-    flex: 1;
+    height: calc(50vh - 8.4rem);
     &:before{
         content: attr(data-title);
         display: block;
@@ -80,4 +78,8 @@
     position: absolute;
     left: 50%;
     bottom: 10px;
+}
+.list{
+    height: calc(100% - 4.4rem);
+    overflow-y: scroll;
 }
