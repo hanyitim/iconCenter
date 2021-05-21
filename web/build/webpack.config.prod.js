@@ -11,10 +11,11 @@ const HashedModuleIdsPlugin = new webpack.HashedModuleIdsPlugin()
 
 
 
-
+// server static path
+const ServerStaticPath = configUtil.pathPwd('../server/src/assets/static/static');
 const config = baseConfig({
   output:{
-    path:configUtil.pathPwd('dist/static'),
+    path:ServerStaticPath || configUtil.pathPwd('dist/static'),
     publicPath:"./static/",
     filename:"[name]_[contenthash].js",
     chunkFilename:'[name]_[contenthash].js'
