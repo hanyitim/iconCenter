@@ -8,7 +8,7 @@ const {RangePicker} = DatePicker;
 const library = {
     id:'$root',
     type: 'object',
-    title: '编辑字体',
+    title: '字体',
     properties: {
         _id:{
             id:'$root/properties/_id',
@@ -36,6 +36,25 @@ const library = {
         },
     }
 };
+const project = {
+    id:'$root',
+    type: 'object',
+    title: '项目',
+    properties:{
+        _id:{
+            id:'$root/properties/_id',
+            type:'string',
+            title:'id',
+        },
+        name:{
+            id:'$root/properties/name',
+            type:'string',
+            title:'名称',
+            description:'请填写项目名称',
+            $required:true
+        }
+    }
+};
 
 export const customComponent = {
     rangePicker(item, form, required){
@@ -60,6 +79,7 @@ export const customComponent = {
 
 export const schema = {
     library,
+    project
 };
 
 export const schemaValue = {
@@ -68,5 +88,9 @@ export const schemaValue = {
         name:'',
         desc:'',
         onwer:''
+    },
+    project:{
+        id:'',
+        name:''
     }
 };

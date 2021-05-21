@@ -1,4 +1,4 @@
-import {iconDal, libraryDal} from '../dal/index.js';
+import {iconDal, libraryDal, projectDal} from '../dal/index.js';
 import {validators} from '../../js/utils.js';
 
 export async function addIcon(data){
@@ -18,11 +18,10 @@ export async function addIcon(data){
 }
 
 
-export async function deleteIcon(id){
-    let icon = await iconDal.findIcons({icons:[id]});
-    console.log(icon);
-    if(icon){
-        let result = await iconDal.deleteIcon(id);
+export async function deleteIcon({ids}){
+    ids = ids.split(',');
+    if(ids.length > 0){
+        let result = await iconDal.deleteIcon(ids);
         return {
             rCode:0,
             msg:result ? '操作成功' : '操作失败'
@@ -30,18 +29,19 @@ export async function deleteIcon(id){
     }else{
         return {
             rCode:-1,
-            msg:'icon not found'
+            msg:'ids length is 0'
         };
     }
 }
 
 export async function updateIcon({_id,...update}){
-    if(!validators.isId(_id)){
-        return {
-            rCode:-1,
-            msg:'icon id 无效'
-        }
-    }
+    // if(!validators.isId(_id)){
+    //     return {
+    //         rCode:-1,
+    //         msg:'icon id 无效'
+    //     }
+    // }
+
     let {data:result,error} = await iconDal.updateIcon(_id,update);
     if(error || result.n === 0){
         return {
@@ -144,6 +144,32 @@ export async function iconAbandon({remove}){
                 rCode:0,
                 data:result
             }
+        }
+    }
+}
+
+export async function iconOperatePID({pId,ids,operate}){
+    let {data:[project],error} = await projectDal.find({_id:pId});
+    if(error || !project){
+        return {
+            rCode:-1,
+            error,
+            msg:'project not found'
+        }
+    }else{
+        ids = ids.split(',');
+        const {data:result,error} = await iconDal.operatePID(ids,pId,operate);
+        if(error || result.n === 0){
+            return {
+                rCode:-1,
+                msg:'操作失败',
+                error
+            };
+        }else{
+            return {
+                rCode:0,
+                msg:'操作成功'
+            };
         }
     }
 }

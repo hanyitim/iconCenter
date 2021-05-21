@@ -9,7 +9,7 @@ import {
 	Radio,
 	Upload,
 	message,
-	Badge
+	// Badge
 } from 'antd';
 import { InboxOutlined, LockOutlined, UnlockOutlined} from '@ant-design/icons';
 import {
@@ -17,26 +17,34 @@ import {
 	apiIconDelete,
 	apiIconImport,
 	apiIconList,
-	apiDist
+	apiDist,
+	apiIconOperatePID
 } from '@/js/api';
 import {getFilePath, iconFormat, download, throttle} from '@/js/util';
 import {
-	LIST_BY_ICONID
+	LIST_BY_ICONID,
+	LIST_BY_LIBRARYID,
+	OPERATE_APPEND_PID,
+	OPERATE_REMOVE_PID
+	// LIST_BY_PROJECTID
 } from '@/js/const.js';
 const components = {
 	'input':Input
 };
 const {Dragger} = Upload;
+const formatProjectList = (data)=> data.map((item)=>({value:item._id,label:item.name}));
 export default class Index extends Component {
 	static propTypes = {
 		match:PropTypes.object,
 		refreshDataTimestamp:PropTypes.number,
-		currentLibrary:PropTypes.object
+		currentLibrary:PropTypes.object,
+		projectList:PropTypes.array
 	}
 	static defaultProps = {
 		match:{},
 		refreshDataTimestamp:Date.now(),
-		currentLibrary:{}
+		currentLibrary:{},
+		projectList:[]
 	}
 	constructor(props) {
 		super(props);
@@ -143,11 +151,20 @@ export default class Index extends Component {
 					label:'自定义字体名称',
 					type:'input'
 				},
+				// {
+				// 	name:'prefix',
+				// 	label:'class前缀',
+				// 	type:'input',
+				// 	initialValue:'icon-'
+				// }
+			],
+			append:[
 				{
-					name:'prefix',
-					label:'class前缀',
-					type:'input',
-					initialValue:'icon-'
+					name:'pId',
+					label:'添加到项目',
+					type:'select',
+					options:formatProjectList(this.props.projectList),
+					initialValue:''
 				}
 			]
 		};
@@ -165,7 +182,8 @@ export default class Index extends Component {
 			this.setState({
 				id:nextId,
 				type:nextType,
-				selectIdList:[]
+				selectIdList:[],
+				editSwitch:false
 			});
 			this.getList(nextId,nextType);
 		}
@@ -181,6 +199,7 @@ export default class Index extends Component {
 			this.setState({
 				data:iconFormat(data),
 				currentIndex:-1,
+				selectIdList:[]
 			});
 		});
 	}
@@ -250,10 +269,17 @@ export default class Index extends Component {
 		},(msg)=>message.error(msg));
 	}
 	handleDelete = ()=>{
-		let {currentIndex, data} = this.state,
-			icon = data[currentIndex];
+		let {currentIndex, data, editSwitch, selectIdList} = this.state,
+			icon = data[currentIndex],
+			ids = [];
 		if(icon){
-			apiIconDelete({id:icon._id}).then(()=>{
+			ids.push(icon._id);
+		}
+		if(!editSwitch && selectIdList.length > 0){
+			ids = ids.concat(selectIdList);
+		}
+		if(ids.length > 0){
+			apiIconDelete({ids:ids.join(',')}).then(()=>{
 				this.getList();
 				message.success('操作成功');
 			},(msg)=>message.error(msg));
@@ -322,7 +348,7 @@ export default class Index extends Component {
 		apiIconImport({...formData,libId:id}).then(()=>{
 			this.getList();
 			this.setState({
-				importPathList:[]
+				importPathList:[],
 			});
 			this.$import.setFieldsValue({path:[]});
 			message.success('导入成功');
@@ -362,16 +388,46 @@ export default class Index extends Component {
 			this.setState({exportLoading:false});
 		});
 	},1000)
+	handleOperatePID = throttle(async({target})=>{
+		const {operate} = target.dataset;
+		const {selectIdList:icons, id, type} = this.state;
+		this.setState({operatePIDLoading:true});
+		let pId;
+		if(icons.length === 0){
+			message.error('暂无选择icon');
+			return;
+		}
+		if(type == LIST_BY_LIBRARYID){
+			const formData = await this.$iconAppend.getFieldValue();
+			pId = formData.pId;
+		}else{
+			pId = id;
+		}
+		apiIconOperatePID({ids:icons.join(','),pId,operate}).then(()=>{
+			message.success('操作成功');
+			if(operate == OPERATE_REMOVE_PID){
+				this.getList();
+			}
+			this.setState({operatePIDLoading:false});
+		},(msg)=>{
+			message.error(msg);
+			this.setState({operatePIDLoading:false});
+		});
+	},1000);
 	render() {
-		let {visible, currentIndex, editSwitch, selectIdList, data, exportLoading} = this.state;
+		let {visible, currentIndex, editSwitch, data, exportLoading, type, operatePIDLoading} = this.state;
 		let {currentLibrary} = this.props;
 		return (
             <div className={style.page}>
 				<header className={style.header}>
-					<div className={style.libraryInfo}>
-						<div className={style.name}>{currentLibrary.name || ''}</div>
-						<div className={style.count}>{data.length}</div>
-					</div>
+					{
+						type == LIST_BY_LIBRARYID && (
+							<div className={style.libraryInfo}>
+								<div className={style.name}>{currentLibrary.name || ''}</div>
+								<div className={style.count}>{data.length}</div>
+							</div>
+						)
+					}
 					<div className={style.switchBox}>
 						<div className={style.switch} data-edit={editSwitch} onClick={this.handleEditSwitch}>
 							<span className={`${style.switchBtn}`} data-index="1"><LockOutlined /></span>
@@ -379,9 +435,13 @@ export default class Index extends Component {
 							<span className={style.line}></span>
 						</div>
 					</div>
-					<div className={style.operationBox}>
-						<a className={`btn ${style.btnImport}`} onClick={this.handleShowModal} >导入</a>
-					</div>
+					{
+						type == LIST_BY_LIBRARYID && (
+							<div className={style.operationBox}>
+								<a className={`btn ${style.btnImport}`} onClick={this.handleShowModal} >导入</a>
+							</div>
+						)
+					}
 				</header>
 				<div className={style.content}>
 					<ul 
@@ -394,23 +454,50 @@ export default class Index extends Component {
 						{
 							editSwitch ? (
 								<div className={style.edit}>
-									<Form
-										layout="vertical"
-										className={style.from}
-										ref={(ref)=>this.$icon=ref}
-									>
-										{this.form(this.formConfig.plane)}
-									</Form>
-									<div className={style.operation}>
-										{
-											currentIndex >= 0 ? (
-												<>
-													<a className={`btn ${style.mb}`} data-type="primary" onClick={this.handleUpdate}>修改</a>
-													<a className={`btn ${style.mb}`} data-type="danger" onClick={this.handleDelete}>删除</a>
-												</>
-											):null
-										}
-									</div>
+									{
+										type == LIST_BY_LIBRARYID ? (
+											<>
+												<Form
+													layout="vertical"
+													className={style.from}
+													ref={(ref)=>this.$icon=ref}
+												>
+													{this.form(this.formConfig.plane)}
+												</Form>
+												<div className={style.operation}>
+													{
+														currentIndex >= 0 ? (
+															<>
+																<a className={`btn ${style.mb}`} data-type="primary" onClick={this.handleUpdate}>修改</a>
+																<a className={`btn ${style.mb}`} data-type="danger" onClick={this.handleDelete}>删除</a>
+															</>
+														):null
+													}
+												</div>
+											</>
+										):(
+											<>
+												<Form
+													layout="vertical"
+													className={style.from}
+													ref={(ref)=>this.$icon=ref}
+												>
+													{this.form(this.formConfig.plane)}
+												</Form>
+												<div className={style.operation}>
+													{
+														currentIndex >= 0 ? (
+															<>
+																<a className={`btn ${style.mb}`} data-type="primary" onClick={this.handleUpdate}>修改</a>
+																<a className={`btn ${style.mb}`} data-type="danger" onClick={this.handleDelete}>删除</a>
+															</>
+														):null
+													}
+												</div>
+											</>
+										)
+									}
+									
 									{/* {
 										currentIcon.paths && (
 											<div className={style.editPath}>
@@ -439,11 +526,42 @@ export default class Index extends Component {
 									</Form>
 									<div className={style.operation}>
 										<a data-type="primary" className={`btn ${style.mb}`} onClick={this.handleExport} data-loading={exportLoading}>
-											<Badge count={selectIdList.length} style={{color:'#fff'}}>
-												导出
-											</Badge>
+											导出
+										</a>
+										<a
+											data-type="danger"
+											className={`btn ${style.mb}`}
+											onClick={ type == LIST_BY_LIBRARYID ? this.handleDelete : this.handleOperatePID}
+											data-loading={exportLoading}
+											data-operate={OPERATE_REMOVE_PID}
+										>
+											批量删除
 										</a>
 									</div>
+									{
+										type == LIST_BY_LIBRARYID && (
+											<>
+												<Form
+													layout="vertical"
+													className={style.from}
+													ref={(ref)=>this.$iconAppend=ref}
+												>
+													{this.form(this.formConfig.append)}
+												</Form>
+												<div className={style.operation}>
+													<a
+														data-type="primary" 
+														className={`btn ${style.mb}`}
+														onClick={this.handleOperatePID}
+														data-loading={operatePIDLoading}
+														data-operate={OPERATE_APPEND_PID}
+													>
+														添加
+													</a>
+												</div>
+											</>
+										)
+									}
 								</div>
 							)
 						}

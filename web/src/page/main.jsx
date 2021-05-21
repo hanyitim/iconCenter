@@ -30,14 +30,15 @@ class Main extends Component{
             updateHash:'',
             refreshDataTimestamp:Date.now(),
             libraryList:[],
-            currentLibrary:{}
+            currentLibrary:{},
+            projectList:[]
         };
     }
     updateState = (data) => {
         this.setState(data);
     }
     render(){
-        let {refreshDataTimestamp, currentLibrary} = this.state;
+        let {refreshDataTimestamp, currentLibrary, projectList} = this.state;
         return (
             <Router>
                 <Layout className="page" theme="light">
@@ -55,7 +56,12 @@ class Main extends Component{
                                                 <Suspense
                                                     fallback={<p>加载中</p>}
                                                 >
-                                                    <item.comp {...props} refreshDataTimestamp={refreshDataTimestamp} currentLibrary={currentLibrary} />
+                                                    <item.comp 
+                                                        {...props}
+                                                        refreshDataTimestamp={refreshDataTimestamp}
+                                                        currentLibrary={currentLibrary}
+                                                        projectList={projectList}
+                                                    />
                                                 </Suspense>
                                             )}
                                         />

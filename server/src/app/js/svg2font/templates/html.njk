@@ -21,20 +21,27 @@
       *{
           list-style:none;
       }
+      i{
+          font-size:16px;
+          font-weight:700;
+      }
+      .item{
+          margin-bottom:15px;
+      }
+      .attr:before{
+          content:attr(data-title);
+          display:block;
+      }
     </style>
 </head>
 <body>
     <h2>字体名:{{fontName}}</h2>
     <ul>
     {% for item in icons %}
-    <li>
-        <p>
-            <span class="{{prefix+item.name}}"></span>
-            <span>className:.{{prefix+item.name}}</span>
-        </p>
-        <p>
-            <span>code:\{{(item.code).toString(16)}}</span>
-        </p>
+    <li className="item">
+        <p><span class="{{prefix+item.name}}"></span></p>
+        <p class="attr" data-title="className:">{{prefix+item.name}}</p>
+        <p data-title="code:">\{{(item.code).toString(16)}}</p>
     </li>
     {% endfor %}
     </ul>

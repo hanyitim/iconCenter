@@ -31,7 +31,7 @@ export async function iconAdd(ctx){
 
 export async function deleteIcon(ctx){
     ctx.check({
-        id:{
+        ids:{
             in:'query',
             notEmpty: true,
         }
@@ -43,7 +43,7 @@ export async function deleteIcon(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await iconBll.deleteIcon(ctx.query.id);
+        let bll = await iconBll.deleteIcon(ctx.query);
         ctx.body = bll;
     }
 }
@@ -93,37 +93,6 @@ export async function iconList(ctx){
     }
 }
 
-export async function iconToProjectOperation(ctx){
-    ctx.check({
-        pId:{
-            in:'query',
-            notEmpty:true,
-            isId:true
-        },
-        iconIds:{
-            in:'query',
-            notEmpty:true,
-            isArray:true
-        },
-        operation:{
-            in:'query',
-            notEmpty:true,
-            isInt:true,
-            isOperation:true
-        }
-    });
-    let errors = await ctx.getValidationResult();
-    if(!errors.isEmpty()){
-        ctx.body = {
-            rCode:-1,
-            errors:errors.array()
-        };
-    }else{
-        let bll = await iconBll.iconToProjectOperation(ctx.request.body);
-        ctx.body = bll;
-    }
-}
-
 export async function iconImport(ctx){
     ctx.checkBody({
         'type':{
@@ -155,3 +124,17 @@ export async function iconAbandon(ctx){
     ctx.body = bll;
 }
 
+export async function iconOperatePID(ctx){
+    ctx.checkBody({
+        'pId':{
+            notEmpty: true
+        },
+        'ids':{
+            notEmpty: true
+        },
+        'operate':{
+            notEmpty: true
+        }
+    });
+    ctx.body = await iconBll.iconOperatePID(ctx.request.body);
+}

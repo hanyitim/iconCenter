@@ -1,12 +1,9 @@
 import {projectBll} from '../bll/index.js';
 
-export async function addProject(ctx){
+export async function add(ctx){
     ctx.checkBody({
         name:{
             notEmpty: true,
-        },
-        desc:{
-            notEmpty: true
         }
     });
     let errors = await ctx.getValidationResult();
@@ -16,44 +13,21 @@ export async function addProject(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await projectBll.addProject(ctx.request.body);
+        let bll = await projectBll.add(ctx.request.body);
         ctx.body = bll
     }
 }
 
 
-export async function deleteProject(ctx){
+export async function remove(ctx){
     ctx.check({
-        id:{
-            in:'params',
+        _id:{
+            in:'query',
             notEmpty: true,
             isId:true
         },
         name:{
             in:'query',
-            notEmpty: true,
-            isFontName: true
-        }
-    });
-    let errors = await ctx.getValidationResult();
-    if(!errors.isEmpty()){
-        ctx.body = {
-            rCode:-1,
-            errors:errors.array()
-        };
-    }else{
-        let bll = await projectBll.deleteProject({...ctx.request.query,...ctx.params});
-        ctx.body = bll;
-    }
-}
-
-export async function updateProject(ctx){
-    ctx.check({
-        id:{
-            in:'params',
-            notEmpty: true,
-        },
-        name:{
             notEmpty: true
         }
     });
@@ -64,13 +38,41 @@ export async function updateProject(ctx){
             errors:errors.array()
         };
     }else{
-        let bll = await projectBll.updateProject({...ctx.request.body,...ctx.params});
+        let bll = await projectBll.remove(ctx.request.query);
         ctx.body = bll;
     }
 }
 
-export async function projectList(ctx){
-    let bll = await projectBll.projectList(ctx.request.body);
+export async function update(ctx){
+    ctx.check({
+        _id:{
+            in:'body',
+            notEmpty: true,
+        },
+        name:{
+            in:'body',
+            notEmpty: true
+        }
+    });
+    let errors = await ctx.getValidationResult();
+    if(!errors.isEmpty()){
+        ctx.body = {
+            rCode:-1,
+            errors:errors.array()
+        };
+    }else{
+        let bll = await projectBll.update(ctx.request.body);
+        ctx.body = bll;
+    }
+}
+
+export async function list(ctx){
+    let bll = await projectBll.list(ctx.request.body);
+    ctx.body = bll;
+}
+
+export async function iconOperate(ctx){
+    const bll = await projectBll.iconOperate(ctx.request.query);
     ctx.body = bll;
 }
 

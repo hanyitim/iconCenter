@@ -8,9 +8,6 @@ router.post('/add',libraryController.addLibrary);
 router.post('/update',libraryController.updateLibrary);
 router.get('/delete',libraryController.deleteLibrary);
 router.get('/:_id',libraryController.libraryDetail);
-router.post('/:_id/iconImport',libraryController.libraryIconImport);
-router.get('/:_id/iconRemove',libraryController.libraryIconRemove);
-router.get('/:_id/iconSave',libraryController.libraryIconSave);
 export default router;
 
 

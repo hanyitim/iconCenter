@@ -31,7 +31,7 @@ export class PresetMiddleware {
      * 并且设置该文件的Cache-Control缓存
      */
     this.app.use(koaFavicon(pathJoin(cwd, './src/assets/static/favicon.ico')));
-    this.app.use(koaStaticServer({ rootDir: pathJoin(cwd, './src/assets/static'), rootPath: '/static' }));
+    this.app.use(koaStaticServer({ rootDir: pathJoin(cwd, './src/assets/static'), rootPath: '/static'}));
     this.app.use(koaBody({
       multipart: true,
       formidable: {

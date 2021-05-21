@@ -8,11 +8,6 @@ const projectShema = new Schema({
         type:String,
         require:true
     },
-    desc:String,
-    icons:{
-        type:Schema.Types.ObjectId,
-        ref:'icon'
-    },
     createTime:{
         type:Date,
         default:Date.now

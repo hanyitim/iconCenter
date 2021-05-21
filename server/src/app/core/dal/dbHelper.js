@@ -27,6 +27,7 @@ export async function findDataPopulation(model,conditions,path){
 
 export const addData = factory('insertMany');
 export const updateData = factory('updateOne');
+export const updateMany = factory('updateMany');
 export const removeData = factory('remove');
 export const findData = factory('find');
 

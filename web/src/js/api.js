@@ -61,6 +61,10 @@ export const apiIconDelete = req({
     url:`${HOST}/api/icon/delete`,
 });
 
+export const apiIconOperatePID = req({
+    url:`${HOST}/api/icon/operatepid`,
+    method:'post'
+});
 
 export const apiLibraryDetail = ()=>req({
     baseURL:`${HOST}/api/library/`,
@@ -76,4 +80,23 @@ export const apiDist = req({
     url:`${HOST}/api/common/dist`,
     method:'post',
     responseType: 'blob'
+});
+
+export const apiProjectList = req({
+    url:`${HOST}/api/project/list`,
+});
+
+export const apiProjectAdd = req({
+    url:`${HOST}/api/project/add`,
+    method:'post'
+});
+
+export const apiProjectDelete = req({
+    url:`${HOST}/api/project/delete`,
+    method:'get'
+});
+
+export const apiProjectUpdate = req({
+    url:`${HOST}/api/project/update`,
+    method:'post'
 });
