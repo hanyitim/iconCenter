@@ -8,11 +8,13 @@ import koaJson from 'koa-json';
 import koaFavicon from 'koa-favicon';
 import koaStaticServer from 'koa-static-server';
 import koaValidator from 'koa-middle-validator';
+import koaCompress from 'koa-compress';
 import {
   koaCors, koaNotFound
 } from './middlewares/index.js';
 import { join as pathJoin } from 'path';
 import {validators} from './js/utils.js';
+import zlib from 'zlib';
 
 const cwd = process.cwd();
 export class PresetMiddleware {
@@ -31,7 +33,24 @@ export class PresetMiddleware {
      * 并且设置该文件的Cache-Control缓存
      */
     this.app.use(koaFavicon(pathJoin(cwd, './src/assets/static/favicon.ico')));
-    this.app.use(koaStaticServer({ rootDir: pathJoin(cwd, './src/assets/static'), rootPath: '/static'}));
+    this.app.use(koaCompress({
+      filter(content_type) {
+        return /(text|javascript|html|png|css)/i.test(content_type);
+      },
+      threshold: 2048,
+      gzip: {
+        flush: zlib.constants.Z_SYNC_FLUSH
+      },
+      deflate: {
+        flush: zlib.constants.Z_SYNC_FLUSH,
+      },
+      br: false // disable brotli
+    }));
+    this.app.use(koaStaticServer({
+      rootDir: pathJoin(cwd, './src/assets/static'),
+      rootPath: '/static',
+      maxage: 60 * 60 * 24 * 365
+    }));
     this.app.use(koaBody({
       multipart: true,
       formidable: {

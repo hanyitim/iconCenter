@@ -10,7 +10,8 @@ const definePlugin = (option = {})=>{
 const HashedModuleIdsPlugin = new webpack.HashedModuleIdsPlugin()
 
 // server static path
-const ServerStaticPath = configUtil.pathPwd('../server/src/assets/static/static');
+// const ServerStaticPath = configUtil.pathPwd('../server/src/assets/static/static');
+const ServerStaticPath = '';
 const config = baseConfig({
   output:{
     path:ServerStaticPath || configUtil.pathPwd('dist/static'),
