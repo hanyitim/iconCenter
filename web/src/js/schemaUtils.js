@@ -14,6 +14,7 @@ const library = {
             id:'$root/properties/_id',
             type:'string',
             title:'id',
+            $disabled:true
         },
         name:{
             id:'$root/properties/name',
@@ -45,6 +46,7 @@ const project = {
             id:'$root/properties/_id',
             type:'string',
             title:'id',
+            $disabled:true
         },
         name:{
             id:'$root/properties/name',

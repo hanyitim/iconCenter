@@ -13,7 +13,6 @@ iframe{
     padding: 0;
     margin: 0;
     list-style: none;
-    user-select: none;
 }
 ::-webkit-scrollbar{
     width: 0px;
