@@ -12,7 +12,6 @@ const path = require('path'),
       tinyPngWebpackPlugin = require('tinypng-webpack-plugin'),
       BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
       OpimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
-      XBirdWebpackPlugin = require('@lizhife/xbird-config-webpack-plugin'),
       MinicssExtractPlugin = require('mini-css-extract-plugin');
 
 //分析文件体积，直接push 到 plugins 里面去
@@ -230,11 +229,6 @@ function getPlugins(option=[]){
             swDest:"../service-worker.js",
             include:[/\.(?:js|css)$/]
         }))
-    }
-    if(projectConfig.configId && isHot){
-        plugins.push(new XBirdWebpackPlugin({
-            configId:projectConfig.configId
-        }));
     }
     return plugins;
 }
