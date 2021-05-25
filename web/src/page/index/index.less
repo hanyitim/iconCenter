@@ -106,6 +106,8 @@
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
     // justify-content: space-around;
     .iconBox{
         width: 7.14%;
@@ -129,6 +131,7 @@
         border: 2px solid transparent;
         box-sizing: border-box;
         position: relative;
+        overflow: hidden;
         &.selected{
             border-color: #0433ff;
         }
@@ -190,4 +193,25 @@
 }
 .mb{
     margin-bottom: 20px;
+}
+@media screen and (max-width:1000px) {
+    .list{
+        .iconBox{
+            width: 10%;
+        }
+    }
+}
+@media screen and (max-width:800px) {
+    .list{
+        .iconBox{
+            width: 12.5%;
+        }
+    }
+}
+@media screen and (max-width:600px) {
+    .list{
+        .iconBox{
+            width: 25%;
+        }
+    }
 }
