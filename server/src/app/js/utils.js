@@ -10,10 +10,11 @@ const baseWidth = 1024;
 
 function parsePath($path,scale){
     let paths = [];
-    $path.forEach((path)=>{
+    $path.each((index,path)=>{
         let d = path.attribs.d;
         paths.push(d.replace(/[\d\.]+/g,(num)=>(num * scale).toFixed(8)));
     });
+    debugger;
     return paths;
 }
 function mirrorImagePath(paths,height){
@@ -25,7 +26,7 @@ function parseG($g){
         let id = g.attribs.id;
         tags.push(id);
     })
-    return tags;
+    return tags.join(',');
 }
 function customValidators(){
     const isId = (value)=>mongoose.Types.ObjectId.isValid(value);

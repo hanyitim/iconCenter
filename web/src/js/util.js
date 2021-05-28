@@ -34,7 +34,7 @@ export const iconFormat = (icons)=>{
         return {
             ...item,
             content:String.fromCharCode(item.code),
-            unicode:(item.code).toString(16)
+            unicode:item.code ? (item.code).toString(16) : ''
         };
     });
 };

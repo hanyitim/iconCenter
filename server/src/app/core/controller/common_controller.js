@@ -11,6 +11,7 @@ export async function upload(ctx){
                 msg:'资源格式不合法'
             };
         }
+        debugger;
         let renameResult = fs.renameSync(file.path,`${file.path}${mineType[file.type]}`);
         if(renameResult){
             fs.unlinkSync(file.path);
