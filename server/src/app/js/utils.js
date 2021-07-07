@@ -26,7 +26,7 @@ function parseG($g){
         let id = g.attribs.id;
         tags.push(id);
     })
-    return tags.join(',');
+    return tags;
 }
 function customValidators(){
     const isId = (value)=>mongoose.Types.ObjectId.isValid(value);
@@ -71,14 +71,15 @@ export function parseFile(paths,type,libraryId){
                         height = $svg.attr('height');
                     const scale = baseWidth/parseInt(width);
                     let paths = parsePath($path,scale);
+                    let tags = parseG($g);
                     icons.push({
                         width:baseWidth,
                         height:parseInt(height) * scale,
                         paths,
                         mirrorImagePaths:mirrorImagePath(paths,parseInt(height)),
-                        tags:parseG($g),
+                        tags:tags.join(','),
                         libId:libraryId,
-                        name:randomWord(8),
+                        name:tags && tags.length > 0 ? tags[0] : randomWord(8),
                         projectIds:[]
                     });
                     return icons;
