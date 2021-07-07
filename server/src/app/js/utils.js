@@ -48,7 +48,6 @@ function parseType(type){
 
 export function parseFile(paths,type,libraryId){
     let icons = [];
-    debugger;
     const parseIcons = (path) => {
         let filePath = pathJoin(cwd,'/src/assets/static/',path),
             icons = [];
@@ -90,7 +89,6 @@ export function parseFile(paths,type,libraryId){
                         width = $fontface.attr('units-per-em'),
                         height = width;
                     const scale = baseWidth/parseInt(width);
-                    debugger;
                     $glyph.each((index,glyph)=>{
                         let {attribs} = glyph;
                         if(attribs.d && attribs.d.length > 0){

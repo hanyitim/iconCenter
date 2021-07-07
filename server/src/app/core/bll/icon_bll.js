@@ -75,7 +75,7 @@ export async function iconImport(_id,data){
                 lastCode = Math.max(lastCode,parseInt(icon.code));
             }else{
                 lastCode +=1;
-                icon.code;
+                icon.code = lastCode;
             }
             icons.push(icon);
         });
