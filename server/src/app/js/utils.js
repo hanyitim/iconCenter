@@ -10,11 +10,11 @@ const baseWidth = 1024;
 
 function parsePath($path,scale){
     let paths = [];
+    
     $path.each((index,path)=>{
         let d = path.attribs.d;
         paths.push(d.replace(/[\d\.]+/g,(num)=>(num * scale).toFixed(8)));
     });
-    debugger;
     return paths;
 }
 function mirrorImagePath(paths,height){
@@ -48,6 +48,7 @@ function parseType(type){
 
 export function parseFile(paths,type,libraryId){
     let icons = [];
+    debugger;
     const parseIcons = (path) => {
         let filePath = pathJoin(cwd,'/src/assets/static/',path),
             icons = [];
@@ -75,7 +76,7 @@ export function parseFile(paths,type,libraryId){
                         width:baseWidth,
                         height:parseInt(height) * scale,
                         paths,
-                        mirrorImagePaths:mirrorImagePath(paths,height),
+                        mirrorImagePaths:mirrorImagePath(paths,parseInt(height)),
                         tags:parseG($g),
                         libId:libraryId,
                         name:randomWord(8),
@@ -89,13 +90,14 @@ export function parseFile(paths,type,libraryId){
                         width = $fontface.attr('units-per-em'),
                         height = width;
                     const scale = baseWidth/parseInt(width);
+                    debugger;
                     $glyph.each((index,glyph)=>{
                         let {attribs} = glyph;
                         if(attribs.d && attribs.d.length > 0){
                             icons.push({
                                 width:baseWidth,
                                 height:parseInt(height) * scale,
-                                paths:parsePath([glyph],scale),
+                                paths:parsePath($(glyph),scale),
                                 // paths:parsePath([attribs.d],scale),
                                 mirrorImagePaths:mirrorImagePath([attribs.d],parseInt(height) * scale),
                                 name:attribs['glyph-name'] || randomWord(8),

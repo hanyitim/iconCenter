@@ -1,7 +1,13 @@
 import fs from 'fs';
 import { commonBll } from '../bll/index.js';
 import mineType from '../../js/mimeType.js';
+import { join as pathJoin } from 'path';
 
+const cwd = process.cwd();
+const uploadPath = pathJoin(cwd,'./src/assets/static/upload');
+if(!fs.existsSync(uploadPath)){
+    fs.mkdirSync(uploadPath);
+}
 export async function upload(ctx){
     let {file} = ctx.request.files;
     if(file){
@@ -11,7 +17,6 @@ export async function upload(ctx){
                 msg:'资源格式不合法'
             };
         }
-        debugger;
         let renameResult = fs.renameSync(file.path,`${file.path}${mineType[file.type]}`);
         if(renameResult){
             fs.unlinkSync(file.path);
