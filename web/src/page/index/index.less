@@ -82,6 +82,27 @@
             }
         }
     }
+    .checkBox {
+        width: 100px;
+        margin-left: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(0, 0, 0, 1);
+        line-height: 40px;
+        border-radius: 6px;
+        text-align: center;
+        font-size: 24px;
+        
+        .checkIcon {
+            margin-right: 5px;
+            cursor: pointer;
+            &.disabled {
+                color: rgba(0, 0, 0, 0.1);
+                cursor: default;
+            }
+        }
+    }
     .operationBox{
         flex: 1;
         display: flex;
@@ -143,6 +164,9 @@
             height: 30px;
             transform: translate(-50%,-50%);
         }
+    }
+    .iconName {
+        text-align: center;
     }
 }
 .panel{

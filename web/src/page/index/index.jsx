@@ -11,7 +11,7 @@ import {
 	message,
 	// Badge
 } from 'antd';
-import { InboxOutlined, LockOutlined, UnlockOutlined} from '@ant-design/icons';
+import { InboxOutlined, LockOutlined, UnlockOutlined, FileDoneOutlined, FileOutlined } from '@ant-design/icons';
 import {
 	apiIconUpdate,
 	apiIconDelete,
@@ -223,6 +223,7 @@ export default class Index extends Component {
 						</g>
 					</svg>
 				</div>
+				<div className={style.iconName}>{icon.name}</div>
 			</li>
 		));
 	}
@@ -285,6 +286,21 @@ export default class Index extends Component {
 			},(msg)=>message.error(msg));
 		}else{
 			message.error('icon不存在');
+		}
+	}
+	handleSelectAll = (type) => {
+		const {data, editSwitch} = this.state;
+
+		if(!editSwitch) {
+			if(type) {
+				this.setState({
+					selectIdList: data.map(v => v._id)
+				});
+			}else {
+				this.setState({
+					selectIdList: []
+				});
+			}
 		}
 	}
 	formItem = ({inputProps={},type,options,...itemProps}) => {
@@ -434,6 +450,10 @@ export default class Index extends Component {
 							<span className={`${style.switchBtn}`} data-index="2"><UnlockOutlined /></span>
 							<span className={style.line}></span>
 						</div>
+					</div>
+					<div className={style.checkBox}>
+						<FileDoneOutlined className={`${style.checkIcon} ${editSwitch ? style.disabled : null}`} onClick={this.handleSelectAll.bind(this, true)} />
+						<FileOutlined className={`${style.checkIcon} ${editSwitch ? style.disabled : null}`} onClick={this.handleSelectAll.bind(this, false)} />
 					</div>
 					{
 						type == LIST_BY_LIBRARYID && (
