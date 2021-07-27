@@ -76,5 +76,6 @@ module.exports = function(option = {}){
         },
         cache:true
     }
-    return smp.wrap(config);
+    // return smp.wrap(config);
+    return config
 }
