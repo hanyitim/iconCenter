@@ -65,3 +65,35 @@ function isType(arg,type){
 export const isString = (arg) => isType(arg,'string');
 export const isArray = (arg) => isType(arg,'array');
 export const isFunction = (arg) => isType(arg,'function');
+
+export function copyToClipboard(text, cb) {
+    if (navigator && navigator.clipboard) {
+      navigator.clipboard.writeText(text)
+        .then(() => {
+            cb && cb();
+        })
+        .catch(err => {
+          console.error('Could not copy text: ', err);
+        });
+    } else {
+      const dummyElement = document.createElement('span');
+      dummyElement.style.whiteSpace = 'pre';
+      dummyElement.textContent = text;
+      document.body.appendChild(dummyElement);
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      const range = document.createRange();
+      range.selectNode(dummyElement);
+      selection.addRange(range);
+
+      const isSuccess = document.execCommand('copy');
+
+      if(isSuccess) {
+        cb && cb();
+      }
+
+      selection.removeAllRanges();
+      document.body.removeChild(dummyElement);
+    }
+  }

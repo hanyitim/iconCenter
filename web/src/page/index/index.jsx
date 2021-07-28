@@ -20,7 +20,7 @@ import {
 	apiDist,
 	apiIconOperatePID
 } from '@/js/api';
-import {getFilePath, iconFormat, download, throttle} from '@/js/util';
+import {getFilePath, iconFormat, download, throttle, copyToClipboard} from '@/js/util';
 import {
 	LIST_BY_ICONID,
 	LIST_BY_LIBRARYID,
@@ -235,6 +235,10 @@ export default class Index extends Component {
 		if(!editSwitch){
 			let index = selectIdList.indexOf(current._id);
 			if(current){
+				// 添加剪切板复制类名
+				copyToClipboard(current.name, () => {
+					// message.success('已复制icon名称');
+				});
 				if(index < 0){
 					selectIdList.splice(0,0,current._id);
 				}else{
