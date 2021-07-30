@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import opentype from 'opentype.js';
 import { copyToClipboard } from '@/js/util';
 import { message } from 'antd';
+import { req } from '@/js/request.js';
 import style from './index.less';
 
 export default function Tool2() {
   const [iconList, setIconList] = useState([]);
+
+  const [onlineLink, setOnlineLink] = useState('');
 
   function onChange(e) {
     const file = e.target.files[0];
@@ -53,25 +56,56 @@ export default function Tool2() {
 
     $style.innerHTML = `
       @font-face {
-      font-family: 'iconfont';
-      src: url('${bufferStr}') format('truetype');
+        font-family: 'iconfont';
+        src: url('${bufferStr}') format('truetype');
       }
       .${style.iconfont} {
-      font-family: "iconfont" !important;
-      font-size: 24px;font-style: normal;
-      -webkit-font-smoothing: antialiased;
-      -webkit-text-stroke-width: 0.2px;
-      -moz-osx-font-smoothing: grayscale;
+        font-family: "iconfont" !important;
+        font-size: 24px;font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.2px;
+        -moz-osx-font-smoothing: grayscale;
       }`;
 
     document.body.append($style);
   }
 
+  function onLinkPreview() {
+    if (!onlineLink) return;
+    
+    req({
+      url: onlineLink,
+      responseType: 'arraybuffer'
+    })().then(data => {
+      parseIcon(data);
+      setStyle(onlineLink);
+    });
+  }
+
   return (
     <div className={style.wrap}>
-      <h1>本地ttf、woff、otf预览页</h1>
-      <input type="file" onChange={onChange} accept=".ttf,.woff,.otf" />
-      {iconList.length > 0 && <div className={style.tips}>点击复制unicode编码</div>}
+      <h1>ttf、woff、otf文件预览页</h1>
+      <div className={style.uploadBox}>
+        <div>
+          本地文件预览：
+          <input type="file" onChange={onChange} accept=".ttf,.woff,.otf" />
+        </div>
+
+        <div>
+          <input
+            className={style.input}
+            type="input"
+            onChange={(e) => {
+              setOnlineLink(e.target.value);
+            }}
+            value={onlineLink}
+          />
+          <button onClick={onLinkPreview}>线上链接预览</button>
+        </div>
+      </div>
+      {iconList.length > 0 && (
+        <div className={style.tips}>点击复制unicode编码</div>
+      )}
       <div className={style.iconWrap}>
         {iconList.map((v, i) => (
           <div
