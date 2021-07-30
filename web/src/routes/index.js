@@ -5,6 +5,7 @@ import {LIST_BY_LIBRARYID} from '@/js/const.js';
 const Index = lazy(()=> import(/* webpackChunkName: "Index" */ '@/page/index/index.jsx'));
 // const Details = lazy(()=> import(/* webpackChunkName: "Index" */ '@/page/details/index.jsx'));
 const Tool = lazy(()=> import(/* webpackChunkName: "Index" */ '@/page/tool/index.jsx'));
+const PreviewFont = lazy(()=> import(/* webpackChunkName: "Tool2" */ '@/page/previewFont/index.jsx'));
 
 export let redirect = `/index/${LIST_BY_LIBRARYID}/`;
 export const routes = [
@@ -19,5 +20,9 @@ export const routes = [
     {
         path:'/tool',
         comp:Tool
+    },
+    {
+        path:'/preview-font',
+        comp:PreviewFont
     }
 ];

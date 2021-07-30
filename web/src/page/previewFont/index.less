@@ -1,0 +1,36 @@
+.wrap {
+  padding: 10px;
+  height: 100vh;
+  overflow: auto;
+
+  .iconWrap {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    .iconBox {
+      margin: 6px;
+      width: 100px;
+      padding: 10px 6px;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #dddddd;
+      overflow: hidden;
+      white-space: pre-line;
+      box-sizing: border-box;
+      transition-duration: 0.4s;
+      transition-property: background, box-shadow;
+      background-color: #fff;
+      &:hover {
+        background-color: #EBEBEB;
+      }
+
+      .iconfont {
+        margin: 0 20px;
+        padding: 6px;
+        border-radius: 4px;
+        font-size: 28px;
+      }
+    }
+  }
+}
