@@ -17,6 +17,7 @@ import './page.normal.less';
 // import Index from '@/page/index/index.jsx';
 //components
 import Sider from '@/components/Sider/index.jsx';
+import NotFound from '@/page/notFound/index.jsx';
 
 window.Modal = Modal;
 window.message = message;
@@ -68,7 +69,7 @@ class Main extends Component{
                                     );
                                 })
                             }
-                            <Route render={() => <h1 style={{ textAlign: 'center', marginTop: '160px'}}>迷路了p(´⌒｀｡q) </h1>} />
+                            <Route render={() => (<NotFound />)} />
                         </Switch>
                     </Content>
                 </Layout>

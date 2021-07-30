@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import opentype from 'opentype.js';
 import { copyToClipboard } from '@/js/util';
+import { message } from 'antd';
 import style from './index.less';
 
 export default function Tool2() {
@@ -69,15 +70,17 @@ export default function Tool2() {
   return (
     <div className={style.wrap}>
       <h1>本地ttf、woff、otf预览页</h1>
-      <input type="file" onChange={onChange} />
-      {iconList.length > 0 && <div>点击复制unicode编码</div>}
+      <input type="file" onChange={onChange} accept=".ttf,.woff,.otf" />
+      {iconList.length > 0 && <div className={style.tips}>点击复制unicode编码</div>}
       <div className={style.iconWrap}>
         {iconList.map((v, i) => (
           <div
             key={i}
             className={style.iconBox}
             onClick={() => {
-              copyToClipboard(v.name);
+              copyToClipboard(v.name, () => {
+                message.success('已复制：' + v.name);
+              });
             }}
           >
             <p
