@@ -76,7 +76,7 @@ export function parseFile(paths,type,libraryId){
                         width:baseWidth,
                         height:parseInt(height) * scale,
                         paths,
-                        mirrorImagePaths:mirrorImagePath(paths,parseInt(height)),
+                        mirrorImagePaths:mirrorImagePath(paths,parseInt(height) * scale),
                         tags:tags.join(','),
                         libId:libraryId,
                         name:tags && tags.length > 0 ? tags[0] : randomWord(8),
