@@ -1,6 +1,6 @@
 module.exports = {
     dev:{
-        API:'http://localhost:8080',
+        API:'http://localhost:8181',
         ENV:'dev',
     },
     lrdp:{

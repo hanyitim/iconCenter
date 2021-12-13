@@ -97,3 +97,5 @@ export function copyToClipboard(text, cb) {
       document.body.removeChild(dummyElement);
     }
   }
+
+  export const searchMap = (str) => new URLSearchParams(str);

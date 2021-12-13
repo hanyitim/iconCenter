@@ -244,8 +244,8 @@ export default class MySider extends Component{
                         >
                             {
                                 libraryList.map((library,index)=>(
-                                    <Menu.Item key={`#/index/${LIST_BY_LIBRARYID}/${library._id}`}>
-                                        <Link data-index={index} data-key="libraryList" data-type="library" to={`/index/${LIST_BY_LIBRARYID}/${library._id}`}>
+                                    <Menu.Item key={`#/index/${LIST_BY_LIBRARYID}/${library._id}?name=${library.name}`}>
+                                        <Link data-index={index} data-key="libraryList" data-type="library" to={`/index/${LIST_BY_LIBRARYID}/${library._id}?name=${library.name}`}>
                                             {library.name}
                                         </Link>
                                     </Menu.Item>

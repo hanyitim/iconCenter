@@ -13,7 +13,7 @@ function normalizePort(val) {
   return false;
 }
 
-const port = normalizePort(process.env.PORT || '8080');
+const port = normalizePort(process.env.PORT || '8181');
 /**
  * 由于原生的koa的context.onerror不够全面,
  * 因此这里重写context.onerror

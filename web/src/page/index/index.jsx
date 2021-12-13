@@ -20,7 +20,7 @@ import {
 	apiDist,
 	apiIconOperatePID
 } from '@/js/api';
-import {getFilePath, iconFormat, download, throttle, copyToClipboard} from '@/js/util';
+import {getFilePath, iconFormat, download, throttle, copyToClipboard, searchMap} from '@/js/util';
 import {
 	LIST_BY_ICONID,
 	LIST_BY_LIBRARYID,
@@ -36,19 +36,21 @@ const formatProjectList = (data)=> data.map((item)=>({value:item._id,label:item.
 export default class Index extends Component {
 	static propTypes = {
 		match:PropTypes.object,
+		location:PropTypes.object,
 		refreshDataTimestamp:PropTypes.number,
-		currentLibrary:PropTypes.object,
 		projectList:PropTypes.array
 	}
 	static defaultProps = {
 		match:{},
+		location:{},
 		refreshDataTimestamp:Date.now(),
-		currentLibrary:{},
 		projectList:[]
 	}
 	constructor(props) {
 		super(props);
 		let {type, id} = this.props.match.params || {};
+		let {search} = this.props.location || {};
+		const name = (searchMap(`${search}`)).get('name');
 		this.state = {
 			visible:false,
 			confirmLoading:false,
@@ -62,7 +64,8 @@ export default class Index extends Component {
 			importFileNameList:[],
 			info:{},
 			editSwitch:false,
-			exportLoading:false
+			exportLoading:false,
+			name
 		};
 		/* eslint-disable */
 		this.formConfig = {
@@ -149,7 +152,11 @@ export default class Index extends Component {
 				{
 					name:'fontName',
 					label:'自定义字体名称',
-					type:'input'
+					type:'input',
+					rules:[{
+						required:true,
+						message:'请输入自定义字体名称'
+					}]
 				},
 				// {
 				// 	name:'prefix',
@@ -176,14 +183,16 @@ export default class Index extends Component {
 	UNSAFE_componentWillReceiveProps(nextProps){
 		console.log(nextProps.match.params);
 		let {id:nextId,type:nextType} = nextProps.match.params,
-			{id,type} = this.props.match.params;
-
+			{id,type} = this.props.match.params,
+			{search} = nextProps.location;
+		const searchUtil = searchMap(search);
 		if(nextId !== id || nextType !== type){
 			this.setState({
 				id:nextId,
 				type:nextType,
 				selectIdList:[],
-				editSwitch:false
+				editSwitch:false,
+				name:searchUtil.get('name')
 			});
 			this.getList(nextId,nextType);
 		}
@@ -390,10 +399,9 @@ export default class Index extends Component {
 		});
 	}
 	handleExport = throttle(async()=>{
-		let {id, type, selectIdList:icons} = this.state;
-		let {currentLibrary} = this.props;
-		let formData = await this.$iconExport.getFieldValue();
-		let fontName = formData.fontName || currentLibrary.name;
+		let {id, type, selectIdList:icons, name} = this.state;
+		let formData = await this.$iconExport.validateFields();
+		let fontName = formData.fontName || name;
 		this.setState({exportLoading:true});
 		if(icons.length > 0 ){
 			type = LIST_BY_ICONID;
@@ -435,15 +443,14 @@ export default class Index extends Component {
 		});
 	},1000);
 	render() {
-		let {visible, currentIndex, editSwitch, data, exportLoading, type, operatePIDLoading} = this.state;
-		let {currentLibrary} = this.props;
+		let {visible, currentIndex, editSwitch, data, exportLoading, type, operatePIDLoading, name} = this.state;
 		return (
             <div className={style.page}>
 				<header className={style.header}>
 					{
 						type == LIST_BY_LIBRARYID && (
 							<div className={style.libraryInfo}>
-								<div className={style.name}>{currentLibrary.name || ''}</div>
+								<div className={style.name}>{name || ''}</div>
 								<div className={style.count}>{data.length}</div>
 							</div>
 						)
@@ -546,7 +553,7 @@ export default class Index extends Component {
 										className={style.from}
 										ref={(ref)=>this.$iconExport=ref}
 									>
-										{this.form(this.formConfig.export)}
+										{type === '1' && this.form(this.formConfig.export)}
 									</Form>
 									<div className={style.operation}>
 										<a data-type="primary" className={`btn ${style.mb}`} onClick={this.handleExport} data-loading={exportLoading}>
